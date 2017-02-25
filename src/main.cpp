@@ -7,13 +7,12 @@ void main() {
 	NT1065_Params p;
 	p.FormBuffer();
 	// Extract the generated buffer from the class member
-	std::vector<std::uint8_t> result_pre(p.registers, p.registers + p.registers_size);
+	auto result_pre = p.GetBuffer();
 
 	p.AssignBuffer(result_pre.data());
 	// Extract the selected buffer and try to parse it
-	p.ParseBuffer(); 
-	std::vector<std::uint8_t> result_post(p.registers, p.registers + p.registers_size);
-	std::rotate(result_post.rbegin(), result_post.rbegin() + 1, result_post.rend());
+	p.ParseBuffer();
+	auto result_post = p.GetBuffer();
 	if (result_pre == result_post)
 		std::cout << "Success!\n";
 	else {

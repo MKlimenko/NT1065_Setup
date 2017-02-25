@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <fstream>
 #include <iomanip>
-
+#include <vector>
 
 class NT1065_Params {
 public:
@@ -734,10 +734,42 @@ public:
 		of.close();
 	}
 
+	std::vector<std::uint8_t> GetBuffer() {
+		std::vector<std::uint8_t> res(registers, registers + registers_size);
+		return res;
+	}
+
+	template <typename T>
+	void SetBuffer(const std::vector<T> &src) {
+		if (src.size() != registers_size)
+			return;
+		for (auto i = 0; i < registers_size; ++i)
+			registers[i] = src[i];		
+	}
+
+private:
 	static const std::size_t registers_size = 49;
 	std::uint8_t registers[registers_size];
 };
 
+class NT1065_SPI_Setup {
+private:
 
+public:
+	NT1065_Params p;
+
+	enum class NT1065_Status{
+		NT1065_STATUS_OK,
+		NT1065_STATUS_PLL_LOCK_OK,
+		NT1065_STATUS_ERROR_NACK,
+		NT1065_STATUS_PLL_ERROR,
+		NT1065_STATUS_LPF_ERROR,
+		NT1065_STATUS_ERROR
+	};
+
+	NT1065_Status Setup() {
+
+	}
+};
 
 #endif // !_NT_1065_SETUP_HPP_
