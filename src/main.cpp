@@ -17,7 +17,7 @@ void main() {
 		std::cout << "Success!\n";
 	else {
 		std::cerr << "Error! Difference in the:\n";
-		for (auto i = 0; i < result_pre.size(); ++i) {
+		for (std::size_t i = 0; i < result_pre.size(); ++i) {
 			if (result_pre[i] != result_post[i]) {
 				std::cout << i << "-th element. Expected: " << static_cast<std::int32_t>(result_pre[i]) <<
 					".\tReceived: " << static_cast<std::int32_t>(result_post[i]) << std::endl;

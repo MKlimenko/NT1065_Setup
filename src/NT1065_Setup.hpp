@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <vector>
 
 class NT1065_Params {
@@ -739,6 +740,11 @@ public:
 		return res;
 	}
 
+	std::uint8_t* GetBufferPtr() {
+		auto res = registers;
+		return res;
+	}
+
 	template <typename T>
 	void SetBuffer(const std::vector<T> &src) {
 		if (src.size() != registers_size)
@@ -752,24 +758,186 @@ private:
 	std::uint8_t registers[registers_size];
 };
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable:4312)
+#endif // WIN32
 class NT1065_SPI_Setup {
+public:
+	enum class NT1065_Status {
+		Ok,
+		PLL_Lock_Ok,
+		Error_NACK,
+		PLL_Error,
+		LPF_Error,
+		Unknows_Error
+	};
+
 private:
+	std::uint32_t SSP_Base = 0xFFF0D000;
+	std::uint32_t SSPCR0 = SSP_Base + 0x000;
+	std::uint32_t SSPCR1 = SSP_Base + 0x004;
+	std::uint32_t SSPDR = SSP_Base + 0x008;
+	std::uint32_t SSPSR = SSP_Base + 0x00C;
+	std::uint32_t SSPCPSR = SSP_Base + 0x010;
+	std::uint32_t SSPICR = SSP_Base + 0x020;
+	std::uint32_t SSPDMACR = SSP_Base + 0x024;
+
+	std::uint32_t ARMSC_Base = 0xFFF02000;
+	std::uint32_t ARMSC_SPICSCTL = ARMSC_Base + 0x4;
+
+
+	// Refer to the BBP2 user guide
+	void Setup_SPI_Master() {
+		// Clock setup (5 MHz)
+		*reinterpret_cast<std::uint32_t*>(SSPCPSR) = 0x8;
+	
+		// SPI mode setup
+		*reinterpret_cast<std::uint32_t*>(SSPCR0) = 0xF;
+
+		// SPI master/slave setup 
+		*reinterpret_cast<std::uint32_t*>(SSPCR1) = 0x2;	
+	}
+
+	template <typename T>
+	void SPI_Set_Active_Device(T device_number) {
+		if (device_number > 7) 
+			return;
+		
+		*reinterpret_cast<std::uint32_t*>(ARMSC_SPICSCTL) = device_number;
+	}
+
+	NT1065_Status Send_Partition(const std::uint8_t *buf) {
+		// Wait for previous data to be sent
+		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
+			;
+		}
+
+		// std::vector constructor would be more preferable, but STL by DS-5 doesn't support C++11
+		std::uint32_t first_pack[] = { 2, 3, 41, 45, 42, 46, 43, 47, 43, 47, };
+		for (auto i = 0; i < sizeof(first_pack) / sizeof(first_pack[0]); ++i)
+			WriteRegistry(i, buf[i]);
+		
+		Delay(160000);
+
+		std::uint32_t filter_pack[] = { 14, 21, 28, 35, 4, };
+		for (auto i = 0; i < sizeof(filter_pack) / sizeof(filter_pack[0]); ++i)
+			WriteRegistry(i, buf[i]);
+
+		Delay(2200000);
+
+		std::uint32_t second_pack[] = { 12, 11, 16, 23, 30, 37, 15, 22, 29, 36, 19, 26, 33, 40, 13, 20, 27, 34, };
+		for (auto i = 0; i < sizeof(second_pack) / sizeof(second_pack[0]); ++i)
+			WriteRegistry(i, buf[i]);
+
+		// Wait for PLL to be set up
+		std::uint16_t pll_status = 0;
+		do{
+			pll_status = ReadRegistry(43) << 8;
+			pll_status |= ReadRegistry(47);
+			pll_status &= 0x0101;
+		} while (pll_status);
+
+		pll_status = ReadRegistry(44) << 8;
+		pll_status |= ReadRegistry(48);
+
+		if ((pll_status & 0x0101) == 0x0101){
+			auto LPF_status = ReadRegistry(4);
+			if ((LPF_status & 0x2) == 0x2)
+				return NT1065_Status::LPF_Error;
+			return NT1065_Status::PLL_Lock_Ok;
+		}
+
+		return NT1065_Status::PLL_Error;
+	}
+
+	template <typename T>
+	void WriteRegistry(T reg_num, std::uint8_t reg_data) {
+		std::uint8_t data = reg_num & 0x7F;
+		data <<= 8;
+		data |= reg_data;
+
+		// Wait for previous data to be sent
+		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
+			;
+		}
+
+		// Wait for SPI FIFO to empty
+		while ((*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x2) == 0) {
+			;
+		}
+
+		*reinterpret_cast<std::uint32_t*>(SSPDR) = data;
+	}
+
+	template <typename T>
+	std::uint8_t ReadRegistry(T reg) {
+		// Wait for previous data to be sent
+		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10){
+			;
+		}
+
+		// Read all the junk data
+		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x4) {
+			auto tmp_data = *reinterpret_cast<std::uint32_t*>(SSPDR);
+		}
+
+		reg |= 0x80;
+		reg <<= 8;
+		*reinterpret_cast<std::uint32_t*>(SSPDR) = reg;
+
+		// Wait for transfer to complete
+		while ((*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x4) == 0) {
+			;
+		}
+
+		Delay(200);
+		std::uint32_t res = *reinterpret_cast<std::uint32_t*>(SSPDR);
+		res &= 0xFF;
+		return static_cast<std::uint8_t>(res);
+	}
+
+	template <typename T>
+	void Delay(T n_Ticks) {
+		// God knows what does it mean
+		auto i = 0;
+		if (n_Ticks > 25) {
+			auto tmp = n_Ticks - 8;
+			tmp /= 17;
+			do {
+				++i;
+			} while (i < tmp);
+		}
+		else {
+			do {
+				++i;
+			} while (i < n_Ticks);
+		}
+	}
 
 public:
 	NT1065_Params p;
 
-	enum class NT1065_Status{
-		NT1065_STATUS_OK,
-		NT1065_STATUS_PLL_LOCK_OK,
-		NT1065_STATUS_ERROR_NACK,
-		NT1065_STATUS_PLL_ERROR,
-		NT1065_STATUS_LPF_ERROR,
-		NT1065_STATUS_ERROR
-	};
-
 	NT1065_Status Setup() {
+		Setup_SPI_Master();
+		SPI_Set_Active_Device(2);
+		auto NT1065_ID = (ReadRegistry(0) << 8) | ReadRegistry(1);
+		auto true_ID = 0x214A;
+		if (NT1065_ID == true_ID) {
+			std::cout << "NT1065_ID ok";
+			auto result = Send_Partition(p.GetBufferPtr());
+			if (result == NT1065_Status::PLL_Lock_Ok)
+				return NT1065_Status::Ok;
+			else
+				return result;
+		}
+		else
+			return NT1065_Status::Error_NACK;
 
 	}
 };
+#ifdef _WIN32
+#pragma warning(pop)
+#endif // WIN32
 
 #endif // !_NT_1065_SETUP_HPP_
