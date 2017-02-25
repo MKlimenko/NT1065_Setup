@@ -697,7 +697,7 @@ public:
 			(static_cast<std::uint8_t>(General_settings.PLL_VCO_AOK) << 2) | (static_cast<std::uint8_t>(General_settings.RF_AGC_AOK) << 1) | static_cast<std::uint8_t>(General_settings.StdBy_AOK);
 
 		// Clock settings
-		registers[11] = static_cast<std::uint8_t>(Clock_settings.CDIV_R);
+		registers[11] = Clock_settings.CDIV_R;
 		registers[12] = (static_cast<std::uint8_t>(Clock_settings.CLK_Source) << 5) | (static_cast<std::uint8_t>(Clock_settings.CLK_TP) << 4) |
 			(static_cast<std::uint8_t>(Clock_settings.CLK_CC) << 2) | static_cast<std::uint8_t>(Clock_settings.CLK_OL);
 
