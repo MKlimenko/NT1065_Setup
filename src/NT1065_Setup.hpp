@@ -1,5 +1,5 @@
-#ifndef _NT_1065_SETUP_HPP_
-#define _NT_1065_SETUP_HPP_
+#ifndef _NT1065_SETUP_HPP_
+#define _NT1065_SETUP_HPP_
 
 #include <algorithm>
 #include <cstdint>
@@ -15,154 +15,154 @@ public:
 	}
 
 #pragma region enums
-	enum class NT_Mode {
+	enum class Mode {
 		standby = 0,
 		PLL_A,
 		PLL_B,
 		active,
 	};
 
-	enum class NT_TCXO {
+	enum class TCXO {
 		MHz_10 = 0,
 		MHz_24_84,
 	};
 
-	enum class NT_LO_Source {
+	enum class LO_Source {
 		PLL_A_Only = 0,
 		PLL_A_B,
 	};
 
-	enum class NT_LPF_Autocalibration_Status {
+	enum class LPF_Autocalibration_Status {
 		error = 0,
 		success,
 	};
 
-	enum class NT_LPF_Autocalibration_Execute {
+	enum class LPF_Autocalibration_Execute {
 		finished = 0,
 		start
 	};
 
-	enum class NT_Channel_Status_Monitor {
+	enum class Channel_Status_Monitor {
 		channel_1 = 0,
 		channel_2,
 		channel_3,
 		channel_4,
 	};
 
-	enum class NT_Temp_Mode {
+	enum class Temp_Mode {
 		single = 0,
 		continuous,
 	};
 
-	enum class NT_Temp_Execute {
+	enum class Temp_Execute {
 		finished = 0,
 		start,
 	};
 
-	enum class NT_LPF_ACS_AOK {
+	enum class LPF_ACS_AOK {
 		forbidden = 0,
 		permitted
 	};
 
-	enum class NT_PLL_LI_AOK {
+	enum class PLL_LI_AOK {
 		forbidden = 0,
 		permitted
 	};
 
-	enum class NT_PLL_VCO_AOK {
+	enum class PLL_VCO_AOK {
 		forbidden = 0,
 		permitted
 	};
 
-	enum class NT_RF_AGC_AOK {
+	enum class RF_AGC_AOK {
 		forbidden = 0,
 		permitted
 	};
 
-	enum class NT_StdBy_AOK {
+	enum class StdBy_AOK {
 		forbidden = 0,
 		permitted
 	};
 
-	enum class NT_AOK {
+	enum class AOK {
 		fail = 0,
 		valid
 	};
 
-	enum class NT_RF_AGC {
+	enum class RF_AGC {
 		input_ok = 0,
 		input_lower,
 		input_higher,
 		impossible_AGC_damaged,
 	};
 
-	enum class NT_CLK_Source {
+	enum class CLK_Source {
 		PLL_A = 0,
 		PLL_B
 	};
 
-	enum class NT_CLK_TP {
+	enum class CLK_TP {
 		CMOS = 0,
 		LVDS
 	};
 
-	enum class NT_CLK_CC {
+	enum class CLK_CC {
 		V_0_23 = 0,
 		V_0_34,
 		V_0_45,
 		V_0_56,
 	};
 
-	enum class NT_CLK_OL {
+	enum class CLK_OL {
 		level_1_8 = 0,
 		level_2_4,
 		level_2_7,
 		level_external,
 	};
 
-	enum class NT_Channel_LSB {
+	enum class Channel_LSB {
 		USB = 0,
 		LSB,
 	};
 
-	enum class NT_Channel_EN {
+	enum class Channel_EN {
 		disabled = 0,
 		enabled
 	};
 
-	enum class NT_IFA_Amp_LVL {
+	enum class IFA_Amp_LVL {
 		mV_200 = 0,
 		mV_400
 	};
 
-	enum class NT_IFA_ResLoad {
+	enum class IFA_ResLoad {
 		not_mounted = 0,
 		mounted
 	};
 
-	enum class NT_RF_AGC_Mode {
+	enum class RF_AGC_Mode {
 		manual = 0,
 		AGC
 	};
 
-	enum class NT_IFA_AGC_Mode {
+	enum class IFA_AGC_Mode {
 		manual = 0,
 		AGC
 	};
 
-	enum class NT_IFA_OP {
+	enum class IFA_OP {
 		level_1_55 = 0,
 		level_1_75,
 		level_1_90,
 		level_2_00
 	};
 
-	enum class NT_IFA_OT {
+	enum class IFA_OT {
 		analog = 0,
 		sg_mg
 	};
 
-	enum class NT_RF_AGC_UB {
+	enum class RF_AGC_UB {
 		minus_47_dBm = 0,
 		minus_45_dBm,
 		minus_43_dBm,
@@ -171,7 +171,7 @@ public:
 		minus_40_dBm,
 	};
 
-	enum class NT_RF_AGC_LB {
+	enum class RF_AGC_LB {
 		minus_49_dBm = 3,
 		minus_46_dBm,
 		minus_45_dBm,
@@ -179,7 +179,7 @@ public:
 		minus_42_dBm,
 	};
 
-	enum class NT_IFA_Manual_Gain {
+	enum class IFA_Manual_Gain {
 		minus_0_5_dB = 0,
 		plus_10_5_dB = 3,
 		plus_22_7_dB = 7,
@@ -190,7 +190,7 @@ public:
 		plus_63_dB = 23,
 	};
 
-	enum class NT_IFA_Gain {
+	enum class IFA_Gain {
 		minus_0_35_dB = 7,
 		minus_0_3_dB,
 		minus_0_1_dB,
@@ -212,349 +212,337 @@ public:
 		plus_5_1_dB,
 	};
 
-	enum class NT_IFA_ADC_Clk {
+	enum class IFA_ADC_Clk {
 		asyncronous = 1,
 		rising_edge,
 		falling_edge
 	};
 
-	enum class NT_IFA_ADC_OL {
+	enum class IFA_ADC_OL {
 		V_1_8 = 0,
 		V_2_4,
 		V_2_7,
 		V_external
 	};
 
-	enum class NT_PLL_Band {
+	enum class PLL_Band {
 		L2_L3_L5 = 0,
 		L1
 	};
 
-	enum class NT_PLL_Enable {
+	enum class PLL_Enable {
 		disabled = 0,
 		enabled
 	};
 
-	enum class NT_PLL_EXE {
+	enum class PLL_EXE {
 		finished = 0,
 		start
 	};
 
-	enum class NT_Vco_CV {
+	enum class Vco_CV {
 		valid = 0,
 		upper_exceeded,
 		lower_exceeded
 	};
 
-	enum class NT_PLL_Lock {
+	enum class PLL_Lock {
 		not_locked = 0,
 		locked
 	};
 #pragma endregion enums
 
-	struct NT_System_Info {
+	struct System_Info {
 		std::uint32_t ID_h = 0x42;
 		std::uint32_t ID_l = 0x9;
 		std::uint32_t Release = 0x2;
+
+#pragma pack(push)
+#pragma pack(1)
+		struct binary {
+			std::uint8_t ID_h : 8;
+
+			std::uint8_t Release : 3;
+			std::uint8_t ID_l : 5;
+		};
+#pragma pack(pop)
+
+		void ConvertFromBinary(const binary &b) {
+			ID_h = b.ID_h;
+			ID_l = b.ID_l;
+			Release = b.Release;
+		}
 	} System_Info;
 
-	struct NT_General_settings {
-		NT_Mode Mode = NT_Mode::active;
-		NT_TCXO TCXO = NT_TCXO::MHz_10;
-		NT_LO_Source LO_Source = NT_LO_Source::PLL_A_B;
-		NT_LPF_Autocalibration_Status LPF_ACS_S = NT_LPF_Autocalibration_Status::success;
-		NT_LPF_Autocalibration_Execute LPF_EXE = NT_LPF_Autocalibration_Execute::start;
-		NT_Channel_Status_Monitor Ch_StNumSel = NT_Channel_Status_Monitor::channel_1;
-		NT_Temp_Mode TS_MD = NT_Temp_Mode::single;
-		NT_Temp_Execute TS_EXE = NT_Temp_Execute::finished;
+	struct General_Settings {
+		Mode Mode = Mode::active;
+		TCXO TCXO = TCXO::MHz_10;
+		LO_Source LO_Source = LO_Source::PLL_A_B;
+		LPF_Autocalibration_Status LPF_ACS_S = LPF_Autocalibration_Status::success;
+		LPF_Autocalibration_Execute LPF_EXE = LPF_Autocalibration_Execute::start;
+		Channel_Status_Monitor Ch_StNumSel = Channel_Status_Monitor::channel_1;
+		Temp_Mode TS_MD = Temp_Mode::single;
+		Temp_Execute TS_EXE = Temp_Execute::finished;
 
-		NT_LPF_ACS_AOK LPF_ACS_AOK = NT_LPF_ACS_AOK::permitted;
-		NT_PLL_LI_AOK PLL_LI_AOK = NT_PLL_LI_AOK::permitted;
-		NT_PLL_VCO_AOK PLL_VCO_AOK = NT_PLL_VCO_AOK::permitted;
-		NT_RF_AGC_AOK RF_AGC_AOK = NT_RF_AGC_AOK::forbidden;
-		NT_StdBy_AOK StdBy_AOK = NT_StdBy_AOK::permitted;
-		NT_AOK AOK = NT_AOK::valid;
+		LPF_ACS_AOK LPF_ACS_AOK = LPF_ACS_AOK::permitted;
+		PLL_LI_AOK PLL_LI_AOK = PLL_LI_AOK::permitted;
+		PLL_VCO_AOK PLL_VCO_AOK = PLL_VCO_AOK::permitted;
+		RF_AGC_AOK RF_AGC_AOK = RF_AGC_AOK::forbidden;
+		StdBy_AOK StdBy_AOK = StdBy_AOK::permitted;
+		AOK AOK = AOK::valid;
 
 		double TS_code = 0;
 
-		NT_RF_AGC RF_AGC_Down = NT_RF_AGC::input_ok;
-		NT_RF_AGC RF_AGC_Up = NT_RF_AGC::input_ok;
+		RF_AGC RF_AGC_Down = RF_AGC::input_ok;
+		RF_AGC RF_AGC_Up = RF_AGC::input_ok;
 		double RF_GainSt = 0;
 
 		std::uint8_t IFA_GainSt = 0;
-	} General_settings;
 
-	struct NT_Clock_Settings {
+#pragma pack(push)
+#pragma pack(1)
+		struct binary{
+			std::uint8_t General_Settings_Mode : 2;
+			std::uint8_t General_Settings_reserved_0 : 6;
+
+			std::uint8_t General_Settings_LO_Source : 1;
+			std::uint8_t General_Settings_TCXO_sel : 1;
+			std::uint8_t General_Settings_reserved_1 : 6;
+
+			std::uint8_t General_Settings_LPF_EXE : 1;
+			std::uint8_t General_Settings_LPF_ACS_S : 1;
+			std::uint8_t General_Settings_reserved_2 : 6;
+
+			std::uint8_t General_Settings_TS_EXE : 1;
+			std::uint8_t General_Settings_TS_MD : 1;
+			std::uint8_t General_Settings_reserved_3 : 2;
+			std::uint8_t General_Settings_Ch_StNumSel : 2;
+			std::uint8_t General_Settings_Unused : 2;
+
+			std::uint8_t General_Settings_StdBy_AOK : 1;
+			std::uint8_t General_Settings_RF_AGC_AOK : 1;
+			std::uint8_t General_Settings_PLL_VCO_AOK : 1;
+			std::uint8_t General_Settings_PLL_LI_AOK : 1;
+			std::uint8_t General_Settings_LPF_ACS_AOK : 1;
+			std::uint8_t General_Settings_reserved_4 : 3;
+
+
+			std::uint8_t General_Settings_TS_code_h : 2;
+			std::uint8_t General_Settings_reserved_6 : 2;
+			std::uint8_t General_Settings_AOK : 1;
+			std::uint8_t General_Settings_reserved_5 : 3;
+
+			std::uint8_t General_Settings_TS_code_l : 8;
+
+			std::uint8_t General_Settings_RF_GainSt : 4;
+			std::uint8_t General_Settings_RF_AGC : 2;
+			std::uint8_t General_Settings_reserved_7 : 2;
+
+			std::uint8_t General_Settings_IFA_GainSt : 5;
+			std::uint8_t General_Settings_reserved_8 : 3;
+		};
+#pragma pack(pop)
+
+		void ConvertFromBinary(const binary &b) {
+			Mode = static_cast<NT1065_Params::Mode>(b.General_Settings_Mode);
+			LO_Source = static_cast<NT1065_Params::LO_Source>(b.General_Settings_LO_Source);
+			TCXO = static_cast<NT1065_Params::TCXO>(b.General_Settings_TCXO_sel);
+			LPF_EXE = static_cast<NT1065_Params::LPF_Autocalibration_Execute>(b.General_Settings_LPF_EXE);
+			LPF_ACS_S = static_cast<NT1065_Params::LPF_Autocalibration_Status>(b.General_Settings_LPF_ACS_S);
+			TS_EXE = static_cast<NT1065_Params::Temp_Execute>(b.General_Settings_TS_EXE);
+			TS_MD = static_cast<NT1065_Params::Temp_Mode>(b.General_Settings_TS_MD);
+			Ch_StNumSel = static_cast<Channel_Status_Monitor>(b.General_Settings_Ch_StNumSel);
+			StdBy_AOK = static_cast<NT1065_Params::StdBy_AOK>(b.General_Settings_StdBy_AOK);
+			RF_AGC_AOK = static_cast<NT1065_Params::RF_AGC_AOK>(b.General_Settings_RF_AGC_AOK);
+			PLL_VCO_AOK = static_cast<NT1065_Params::PLL_VCO_AOK>(b.General_Settings_PLL_VCO_AOK);
+			PLL_LI_AOK = static_cast<NT1065_Params::PLL_LI_AOK>(b.General_Settings_PLL_LI_AOK);
+			LPF_ACS_AOK = static_cast<NT1065_Params::LPF_ACS_AOK>(b.General_Settings_LPF_ACS_AOK);
+			TS_code = (b.General_Settings_TS_code_h << 8) | b.General_Settings_TS_code_l;
+			AOK = static_cast<NT1065_Params::AOK>(b.General_Settings_AOK);
+			RF_GainSt = b.General_Settings_RF_GainSt * 0.95 + 11;
+			RF_AGC_Up = static_cast<NT1065_Params::RF_AGC>(b.General_Settings_RF_AGC);
+			RF_AGC_Down = static_cast<NT1065_Params::RF_AGC>(b.General_Settings_RF_AGC);
+			IFA_GainSt = b.General_Settings_IFA_GainSt;
+		}
+	} General_Settings;
+
+	struct Clock_Settings {
 		std::uint8_t CDIV_R = 8;
-		NT_CLK_Source CLK_Source = NT_CLK_Source::PLL_A;
-		NT_CLK_TP CLK_TP = NT_CLK_TP::LVDS;
-		NT_CLK_CC CLK_CC = NT_CLK_CC::V_0_45;
-		NT_CLK_OL CLK_OL = NT_CLK_OL::level_1_8;
+		CLK_Source CLK_Source = CLK_Source::PLL_A;
+		CLK_TP CLK_TP = CLK_TP::LVDS;
+		CLK_CC CLK_CC = CLK_CC::V_0_45;
+		CLK_OL CLK_OL = CLK_OL::level_1_8;
 
-	} Clock_settings;
+#pragma pack(push)
+#pragma pack(1)
+		struct binary{
+			std::uint8_t Clock_Settings_CDIV_R : 5;
+			std::uint8_t Clock_Settings_reserved_9 : 3;
 
-	struct NT_Channel_Settings {
-		NT_Channel_LSB Ch_LSB = NT_Channel_LSB::LSB;
-		NT_Channel_EN Ch_EN = NT_Channel_EN::enabled;
+			std::uint8_t Clock_Settings_CLK_OL : 2;
+			std::uint8_t Clock_Settings_CLK_CC : 2;
+			std::uint8_t Clock_Settings_CLK_TP : 1;
+			std::uint8_t Clock_Settings_CLK_Source : 1;
+			std::uint8_t Clock_Settings_reserved_10 : 2;
+		};
+#pragma pack(pop)
+
+		void ConvertFromBinary(const binary &b) {			
+			CDIV_R = b.Clock_Settings_CDIV_R;
+			CLK_OL = static_cast<NT1065_Params::CLK_OL>(b.Clock_Settings_CLK_OL);
+			CLK_CC = static_cast<NT1065_Params::CLK_CC>(b.Clock_Settings_CLK_CC);
+			CLK_TP = static_cast<NT1065_Params::CLK_TP>(b.Clock_Settings_CLK_TP);
+			CLK_Source = static_cast<NT1065_Params::CLK_Source>(b.Clock_Settings_CLK_Source);
+		}
+
+	} Clock_Settings;
+
+	struct Channel_Settings {
+		Channel_LSB Ch_LSB = Channel_LSB::LSB;
+		Channel_EN Ch_EN = Channel_EN::enabled;
 		double LPF_code = 15.12;
 
-		NT_IFA_Amp_LVL IFA_AmpLvl = NT_IFA_Amp_LVL::mV_200;
-		NT_IFA_ResLoad IFA_ResLoad = NT_IFA_ResLoad::mounted;
-		NT_RF_AGC_Mode RF_AGC_MD = NT_RF_AGC_Mode::manual;
-		NT_IFA_AGC_Mode IFA_AGC_MD = NT_IFA_AGC_Mode::AGC;
-		NT_IFA_OP IFA_OP = NT_IFA_OP::level_1_75;
-		NT_IFA_OT IFA_OT = NT_IFA_OT::analog;
-		NT_RF_AGC_UB RF_AGC_UB = NT_RF_AGC_UB::minus_42_dBm;
-		NT_RF_AGC_LB RF_AGC_LB = NT_RF_AGC_LB::minus_46_dBm;
+		IFA_Amp_LVL IFA_AmpLvl = IFA_Amp_LVL::mV_200;
+		IFA_ResLoad IFA_ResLoad = IFA_ResLoad::mounted;
+		RF_AGC_Mode RF_AGC_MD = RF_AGC_Mode::manual;
+		IFA_AGC_Mode IFA_AGC_MD = IFA_AGC_Mode::AGC;
+		IFA_OP IFA_OP = IFA_OP::level_1_75;
+		IFA_OT IFA_OT = IFA_OT::analog;
+		RF_AGC_UB RF_AGC_UB = RF_AGC_UB::minus_42_dBm;
+		RF_AGC_LB RF_AGC_LB = RF_AGC_LB::minus_46_dBm;
 
 		double RF_Gain = 11.0;
-		NT_IFA_Manual_Gain IFA_ManGC = NT_IFA_Manual_Gain::minus_0_5_dB;
-		NT_IFA_Gain IFA_Gain = NT_IFA_Gain::plus_0_3_dB;
-		NT_IFA_ADC_Clk IFA_ADC_Clk = NT_IFA_ADC_Clk::rising_edge;
-		NT_IFA_ADC_OL IFA_ADC_OL = NT_IFA_ADC_OL::V_2_7;
-	} Channel_settings[4];
+		IFA_Manual_Gain IFA_ManGC = IFA_Manual_Gain::minus_0_5_dB;
+		IFA_Gain IFA_Gain = IFA_Gain::plus_0_3_dB;
+		IFA_ADC_Clk IFA_ADC_Clk = IFA_ADC_Clk::rising_edge;
+		IFA_ADC_OL IFA_ADC_OL = IFA_ADC_OL::V_2_7;
 
-	struct NT_PLL_Settings {
-		NT_PLL_Band PLL_Band = NT_PLL_Band::L1;
-		NT_PLL_Enable PLL_EN = NT_PLL_Enable::enabled;
+#pragma pack(push)
+#pragma pack(1)
+		struct binary {
+			std::uint8_t Channel_Settings_En : 1;
+			std::uint8_t Channel_Settings_LSB : 1;
+			std::uint8_t Channel_Settings_reserved_0 : 6;
+
+			std::uint8_t Channel_Settings_LPF_code : 7;
+			std::uint8_t Channel_Settings_reserved_1 : 1;
+
+			std::uint8_t Channel_Settings_IFA_OT : 1;
+			std::uint8_t Channel_Settings_IFA_OP : 2;
+			std::uint8_t Channel_Settings_IFA_AGC_MD : 1;
+			std::uint8_t Channel_Settings_RF_AGC_MD : 1;
+			std::uint8_t Channel_Settings_IFA_ResLoad : 1;
+			std::uint8_t Channel_Settings_IFA_AmpLvl : 1;
+			std::uint8_t Channel_Settings_reserved_2 : 1;
+
+			std::uint8_t Channel_Settings_RF_AGC_LB : 3;
+			std::uint8_t Channel_Settings_reserved_3 : 1;
+			std::uint8_t Channel_Settings_RF_AGC_UB : 3;
+			std::uint8_t Channel_Settings_reserved_4 : 1;
+
+			std::uint8_t Channel_Settings_IFA_ManGC_h : 2;
+			std::uint8_t Channel_Settings_reserved_5 : 2;
+			std::uint8_t Channel_Settings_RF_Gain : 4;
+
+			std::uint8_t Channel_Settings_IFA_Gain : 5;
+			std::uint8_t Channel_Settings_IFA_ManGC_l : 3;
+
+			std::uint8_t Channel_Settings_IFA_ADC_OL : 2;
+			std::uint8_t Channel_Settings_IFA_ADC_Clk : 2;
+			std::uint8_t Channel_Settings_reserved_6 : 4;
+		};
+#pragma pack(pop)
+
+		void ConvertFromBinary(const binary &b) {
+			Ch_EN = static_cast<NT1065_Params::Channel_EN>(b.Channel_Settings_En);
+			Ch_LSB = static_cast<NT1065_Params::Channel_LSB>(b.Channel_Settings_LSB);
+			LPF_code = (b.Channel_Settings_LPF_code + 29.74) / 3.422;
+			IFA_OT = static_cast<NT1065_Params::IFA_OT>(b.Channel_Settings_IFA_OT);
+			IFA_OP = static_cast<NT1065_Params::IFA_OP>(b.Channel_Settings_IFA_OP);
+			IFA_AGC_MD = static_cast<NT1065_Params::IFA_AGC_Mode>(b.Channel_Settings_IFA_AGC_MD);
+			RF_AGC_MD = static_cast<NT1065_Params::RF_AGC_Mode>(b.Channel_Settings_RF_AGC_MD);
+			IFA_ResLoad = static_cast<NT1065_Params::IFA_ResLoad>(b.Channel_Settings_IFA_ResLoad);
+			IFA_AmpLvl = static_cast<NT1065_Params::IFA_Amp_LVL>(b.Channel_Settings_IFA_AmpLvl);
+			RF_AGC_LB = static_cast<NT1065_Params::RF_AGC_LB>(b.Channel_Settings_RF_AGC_LB);
+			RF_AGC_UB = static_cast<NT1065_Params::RF_AGC_UB>(b.Channel_Settings_RF_AGC_UB);
+			IFA_ManGC = static_cast<NT1065_Params::IFA_Manual_Gain>((b.Channel_Settings_IFA_ManGC_h << 3) | b.Channel_Settings_IFA_ManGC_l);
+			RF_Gain = b.Channel_Settings_RF_Gain * 0.95 + 11;
+			IFA_ADC_OL = static_cast<NT1065_Params::IFA_ADC_OL>(b.Channel_Settings_IFA_ADC_OL);
+			IFA_ADC_Clk = static_cast<NT1065_Params::IFA_ADC_Clk>(b.Channel_Settings_IFA_ADC_Clk);
+		}
+	} Channel_Settings[4];
+
+	struct PLL_Settings {
+		PLL_Band PLL_Band = PLL_Band::L1;
+		PLL_Enable PLL_EN = PLL_Enable::enabled;
 		std::uint32_t NDiv_R = 79;
 		std::uint8_t RDiv_R = 1;
-		NT_PLL_EXE PLL_EXE = NT_PLL_EXE::start;
+		PLL_EXE PLL_EXE = PLL_EXE::start;
 
-		NT_Vco_CV Vco_CVL = NT_Vco_CV::valid;
-		NT_Vco_CV Vco_CVH = NT_Vco_CV::valid;
-		NT_PLL_Lock PLL_LI = NT_PLL_Lock::locked;
-	} PLL_settings[2];
+		Vco_CV Vco_CVL = Vco_CV::valid;
+		Vco_CV Vco_CVH = Vco_CV::valid;
+		PLL_Lock PLL_LI = PLL_Lock::locked;
+
+#pragma pack(push)
+#pragma pack(1)
+		struct binary {
+			std::uint8_t PLL_Settings_pllA_PLL_EN : 1;
+			std::uint8_t PLL_Settings_pllA_PLL_Band : 1;
+			std::uint8_t PLL_Settings_pllA_reserved_0 : 6;
+
+			std::uint8_t PLL_Settings_pllA_NDiv_R_h : 8;
+
+			std::uint8_t PLL_Settings_pllA_PLL_EXE : 1;
+			std::uint8_t PLL_Settings_pllA_reserved_1 : 2;
+			std::uint8_t PLL_Settings_pllA_RDiv_R : 4;
+			std::uint8_t PLL_Settings_pllA_NDiv_R_l : 1;
+
+			std::uint8_t PLL_Settings_pllA_PLL_LI : 1;
+			std::uint8_t PLL_Settings_pllA_Vco_CV : 2;
+			std::uint8_t PLL_Settings_pllA_reserved_2 : 5;
+		};
+#pragma pack(pop)
+		
+		void ConvertFromBinary(const binary &b) {
+			PLL_EN = static_cast<NT1065_Params::PLL_Enable>(b.PLL_Settings_pllA_PLL_EN);
+			PLL_Band = static_cast<NT1065_Params::PLL_Band>(b.PLL_Settings_pllA_PLL_Band);
+			NDiv_R = (b.PLL_Settings_pllA_NDiv_R_h << 1) | b.PLL_Settings_pllA_NDiv_R_l;
+			PLL_EXE = static_cast<NT1065_Params::PLL_EXE>(b.PLL_Settings_pllA_PLL_EXE);
+			RDiv_R = b.PLL_Settings_pllA_RDiv_R;
+			PLL_LI = static_cast<NT1065_Params::PLL_Lock>(b.PLL_Settings_pllA_PLL_LI);
+			Vco_CVH = static_cast<NT1065_Params::Vco_CV>(b.PLL_Settings_pllA_Vco_CV);
+			Vco_CVL = static_cast<NT1065_Params::Vco_CV>(b.PLL_Settings_pllA_Vco_CV);
+		}
+	} PLL_Settings[2];
 
 #pragma pack(push)
 #pragma pack(1)
 	struct byte_registers {
-		std::uint8_t System_info_ID_h : 8;
+		System_Info::binary System_Info;
+		General_Settings::binary General_Settings;
+		Clock_Settings::binary Clock_Settings;
+		Channel_Settings::binary Channel_Settings[4];
+		PLL_Settings::binary PLL_Settings[2];
 
-		std::uint8_t System_info_Release : 3;
-		std::uint8_t System_info_ID_l : 5;
-
-		std::uint8_t General_settings_Mode : 2;
-		std::uint8_t General_settings_reserved_0 : 6;
-
-		std::uint8_t General_settings_LO_Source : 1;
-		std::uint8_t General_settings_TCXO_sel : 1;
-		std::uint8_t General_settings_reserved_1 : 6;
-
-		std::uint8_t General_settings_LPF_EXE : 1;
-		std::uint8_t General_settings_LPF_ACS_S : 1;
-		std::uint8_t General_settings_reserved_2 : 6;
-
-		std::uint8_t General_settings_TS_EXE : 1;
-		std::uint8_t General_settings_TS_MD : 1;
-		std::uint8_t General_settings_reserved_3 : 2;
-		std::uint8_t General_settings_Ch_StNumSel : 2;
-		std::uint8_t General_settings_Unused : 2;
-
-		std::uint8_t General_settings_StdBy_AOK : 1;
-		std::uint8_t General_settings_RF_AGC_AOK : 1;
-		std::uint8_t General_settings_PLL_VCO_AOK : 1;
-		std::uint8_t General_settings_PLL_LI_AOK : 1;
-		std::uint8_t General_settings_LPF_ACS_AOK : 1;
-		std::uint8_t General_settings_reserved_4 : 3;
-
-
-		std::uint8_t General_settings_TS_code_h : 2;
-		std::uint8_t General_settings_reserved_6 : 2;
-		std::uint8_t General_settings_AOK : 1;
-		std::uint8_t General_settings_reserved_5 : 3;
-
-		std::uint8_t General_settings_TS_code_l : 8;
-
-		std::uint8_t General_settings_RF_GainSt : 4;
-		std::uint8_t General_settings_RF_AGC : 2;
-		std::uint8_t General_settings_reserved_7 : 2;
-
-		std::uint8_t General_settings_IFA_GainSt : 5;
-		std::uint8_t General_settings_reserved_8 : 3;
-
-		std::uint8_t Clock_settings_CDIV_R : 5;
-		std::uint8_t Clock_settings_reserved_9 : 3;
-
-		std::uint8_t Clock_settings_CLK_OL : 2;
-		std::uint8_t Clock_settings_CLK_CC : 2;
-		std::uint8_t Clock_settings_CLK_TP : 1;
-		std::uint8_t Clock_settings_CLK_Source : 1;
-		std::uint8_t Clock_settings_reserved_10 : 2;
-
-		std::uint8_t Channel_settings_Ch1_En : 1;
-		std::uint8_t Channel_settings_Ch1_LSB : 1;
-		std::uint8_t Channel_settings_Ch1_reserved_0 : 6;
-
-		std::uint8_t Channel_settings_Ch1_LPF_code : 7;
-		std::uint8_t Channel_settings_Ch1_reserved_1 : 1;
-
-		std::uint8_t Channel_settings_Ch1_IFA_OT : 1;
-		std::uint8_t Channel_settings_Ch1_IFA_OP : 2;
-		std::uint8_t Channel_settings_Ch1_IFA_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch1_RF_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch1_IFA_ResLoad : 1;
-		std::uint8_t Channel_settings_Ch1_IFA_AmpLvl : 1;
-		std::uint8_t Channel_settings_Ch1_reserved_2 : 1;
-
-		std::uint8_t Channel_settings_Ch1_RF_AGC_LB : 3;
-		std::uint8_t Channel_settings_Ch1_reserved_3 : 1;
-		std::uint8_t Channel_settings_Ch1_RF_AGC_UB : 3;
-		std::uint8_t Channel_settings_Ch1_reserved_4 : 1;
-
-		std::uint8_t Channel_settings_Ch1_IFA_ManGC_h : 2;
-		std::uint8_t Channel_settings_Ch1_reserved_5 : 2;
-		std::uint8_t Channel_settings_Ch1_RF_Gain : 4;
-
-		std::uint8_t Channel_settings_Ch1_IFA_Gain : 5;
-		std::uint8_t Channel_settings_Ch1_IFA_ManGC_l : 3;
-
-		std::uint8_t Channel_settings_Ch1_IFA_ADC_OL : 2;
-		std::uint8_t Channel_settings_Ch1_IFA_ADC_Clk : 2;
-		std::uint8_t Channel_settings_Ch1_reserved_6 : 4;
-
-		std::uint8_t Channel_settings_Ch2_En : 1;
-		std::uint8_t Channel_settings_Ch2_LSB : 1;
-		std::uint8_t Channel_settings_Ch2_reserved_0 : 6;
-
-		std::uint8_t Channel_settings_Ch2_LPF_code : 7;
-		std::uint8_t Channel_settings_Ch2_reserved_1 : 1;
-
-		std::uint8_t Channel_settings_Ch2_IFA_OT : 1;
-		std::uint8_t Channel_settings_Ch2_IFA_OP : 2;
-		std::uint8_t Channel_settings_Ch2_IFA_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch2_RF_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch2_IFA_ResLoad : 1;
-		std::uint8_t Channel_settings_Ch2_IFA_AmpLvl : 1;
-		std::uint8_t Channel_settings_Ch2_reserved_2 : 1;
-
-		std::uint8_t Channel_settings_Ch2_RF_AGC_LB : 3;
-		std::uint8_t Channel_settings_Ch2_reserved_3 : 1;
-		std::uint8_t Channel_settings_Ch2_RF_AGC_UB : 3;
-		std::uint8_t Channel_settings_Ch2_reserved_4 : 1;
-
-		std::uint8_t Channel_settings_Ch2_IFA_ManGC_h : 2;
-		std::uint8_t Channel_settings_Ch2_reserved_5 : 2;
-		std::uint8_t Channel_settings_Ch2_RF_Gain : 4;
-
-		std::uint8_t Channel_settings_Ch2_IFA_Gain : 5;
-		std::uint8_t Channel_settings_Ch2_IFA_ManGC_l : 3;
-
-		std::uint8_t Channel_settings_Ch2_IFA_ADC_OL : 2;
-		std::uint8_t Channel_settings_Ch2_IFA_ADC_Clk : 2;
-		std::uint8_t Channel_settings_Ch2_reserved_6 : 4;
-
-		std::uint8_t Channel_settings_Ch3_En : 1;
-		std::uint8_t Channel_settings_Ch3_LSB : 1;
-		std::uint8_t Channel_settings_Ch3_reserved_0 : 6;
-
-		std::uint8_t Channel_settings_Ch3_LPF_code : 7;
-		std::uint8_t Channel_settings_Ch3_reserved_1 : 1;
-
-		std::uint8_t Channel_settings_Ch3_IFA_OT : 1;
-		std::uint8_t Channel_settings_Ch3_IFA_OP : 2;
-		std::uint8_t Channel_settings_Ch3_IFA_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch3_RF_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch3_IFA_ResLoad : 1;
-		std::uint8_t Channel_settings_Ch3_IFA_AmpLvl : 1;
-		std::uint8_t Channel_settings_Ch3_reserved_2 : 1;
-
-		std::uint8_t Channel_settings_Ch3_RF_AGC_LB : 3;
-		std::uint8_t Channel_settings_Ch3_reserved_3 : 1;
-		std::uint8_t Channel_settings_Ch3_RF_AGC_UB : 3;
-		std::uint8_t Channel_settings_Ch3_reserved_4 : 1;
-
-		std::uint8_t Channel_settings_Ch3_IFA_ManGC_h : 2;
-		std::uint8_t Channel_settings_Ch3_reserved_5 : 2;
-		std::uint8_t Channel_settings_Ch3_RF_Gain : 4;
-
-		std::uint8_t Channel_settings_Ch3_IFA_Gain : 5;
-		std::uint8_t Channel_settings_Ch3_IFA_ManGC_l : 3;
-
-		std::uint8_t Channel_settings_Ch3_IFA_ADC_OL : 2;
-		std::uint8_t Channel_settings_Ch3_IFA_ADC_Clk : 2;
-		std::uint8_t Channel_settings_Ch3_reserved_6 : 4;
-
-		std::uint8_t Channel_settings_Ch4_En : 1;
-		std::uint8_t Channel_settings_Ch4_LSB : 1;
-		std::uint8_t Channel_settings_Ch4_reserved_0 : 6;
-
-		std::uint8_t Channel_settings_Ch4_LPF_code : 7;
-		std::uint8_t Channel_settings_Ch4_reserved_1 : 1;
-
-		std::uint8_t Channel_settings_Ch4_IFA_OT : 1;
-		std::uint8_t Channel_settings_Ch4_IFA_OP : 2;
-		std::uint8_t Channel_settings_Ch4_IFA_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch4_RF_AGC_MD : 1;
-		std::uint8_t Channel_settings_Ch4_IFA_ResLoad : 1;
-		std::uint8_t Channel_settings_Ch4_IFA_AmpLvl : 1;
-		std::uint8_t Channel_settings_Ch4_reserved_2 : 1;
-
-		std::uint8_t Channel_settings_Ch4_RF_AGC_LB : 3;
-		std::uint8_t Channel_settings_Ch4_reserved_3 : 1;
-		std::uint8_t Channel_settings_Ch4_RF_AGC_UB : 3;
-		std::uint8_t Channel_settings_Ch4_reserved_4 : 1;
-
-		std::uint8_t Channel_settings_Ch4_IFA_ManGC_h : 2;
-		std::uint8_t Channel_settings_Ch4_reserved_5 : 2;
-		std::uint8_t Channel_settings_Ch4_RF_Gain : 4;
-
-		std::uint8_t Channel_settings_Ch4_IFA_Gain : 5;
-		std::uint8_t Channel_settings_Ch4_IFA_ManGC_l : 3;
-
-		std::uint8_t Channel_settings_Ch4_IFA_ADC_OL : 2;
-		std::uint8_t Channel_settings_Ch4_IFA_ADC_Clk : 2;
-		std::uint8_t Channel_settings_Ch4_reserved_6 : 4;
-
-
-		std::uint8_t PLL_settings_pllA_PLL_EN : 1;
-		std::uint8_t PLL_settings_pllA_PLL_Band : 1;
-		std::uint8_t PLL_settings_pllA_reserved_0 : 6;
-
-		std::uint8_t PLL_settings_pllA_NDiv_R_h : 8;
-
-		std::uint8_t PLL_settings_pllA_PLL_EXE : 1;
-		std::uint8_t PLL_settings_pllA_reserved_1 : 2;
-		std::uint8_t PLL_settings_pllA_RDiv_R : 4;
-		std::uint8_t PLL_settings_pllA_NDiv_R_l : 1;
-
-		std::uint8_t PLL_settings_pllA_PLL_LI : 1;
-		std::uint8_t PLL_settings_pllA_Vco_CV : 2;
-		std::uint8_t PLL_settings_pllA_reserved_2 : 5;
-
-		std::uint8_t PLL_settings_pllB_PLL_EN : 1;
-		std::uint8_t PLL_settings_pllB_PLL_Band : 1;
-		std::uint8_t PLL_settings_pllB_reserved_0 : 6;
-
-		std::uint8_t PLL_settings_pllB_NDiv_R_h : 8;
-
-		std::uint8_t PLL_settings_pllB_PLL_EXE : 1;
-		std::uint8_t PLL_settings_pllB_reserved_1 : 2;
-		std::uint8_t PLL_settings_pllB_RDiv_R : 4;
-		std::uint8_t PLL_settings_pllB_NDiv_R_l : 1;
-
-		std::uint8_t PLL_settings_pllB_PLL_LI : 1;
-		std::uint8_t PLL_settings_pllB_Vco_CV : 2;
-		std::uint8_t PLL_settings_pllB_reserved_2 : 5;
 	} raw_params;
 #pragma pack(pop)
 
 	std::int32_t CheckParamsForErrors() {
-		if (Clock_settings.CDIV_R < 8 || Clock_settings.CDIV_R > 32)
+		if (Clock_Settings.CDIV_R < 8 || Clock_Settings.CDIV_R > 32)
 			return 1;
 
 		for (auto i = 0; i < 4; ++i) {
-			if (Channel_settings[i].LPF_code < 11.22 || Channel_settings[i].LPF_code > 43.41)
+			if (Channel_Settings[i].LPF_code < 11.22 || Channel_Settings[i].LPF_code > 43.41)
 				return 1;
 
-			if (Channel_settings[i].RF_Gain < 11 || Channel_settings[i].RF_Gain > 25.5)
+			if (Channel_Settings[i].RF_Gain < 11 || Channel_Settings[i].RF_Gain > 25.5)
 				return 1;
 		}
 
 		for (auto i = 0; i < 2; ++i) {
-			if (PLL_settings[i].NDiv_R < 48 || PLL_settings[i].NDiv_R > 511)
+			if (PLL_Settings[i].NDiv_R < 48 || PLL_Settings[i].NDiv_R > 511)
 				return 1;
-			if (PLL_settings[i].RDiv_R < 1 || PLL_settings[i].RDiv_R > 15)
+			if (PLL_Settings[i].RDiv_R < 1 || PLL_Settings[i].RDiv_R > 15)
 				return 1;
 		}
 
@@ -563,124 +551,22 @@ public:
 
 	void AssignBuffer(const std::uint8_t* buffer) {
 		std::uint8_t* raw_ptr = reinterpret_cast<std::uint8_t*>(&raw_params);
-
 		for (auto i = 0; i < registers_size; ++i) {
 			*raw_ptr++ = buffer[i];
 		}
 	}
 
 	void ParseBuffer() {
-		System_Info.ID_h = raw_params.System_info_ID_h;
-		System_Info.ID_l = raw_params.System_info_ID_l;
-		System_Info.Release = raw_params.System_info_Release;
+		System_Info.ConvertFromBinary(raw_params.System_Info);
+		General_Settings.ConvertFromBinary(raw_params.General_Settings);
+		Clock_Settings.ConvertFromBinary(raw_params.Clock_Settings);
 
-		General_settings.Mode = static_cast<NT_Mode>(raw_params.General_settings_Mode);
-		General_settings.LO_Source = static_cast<NT_LO_Source>(raw_params.General_settings_LO_Source);
-		General_settings.TCXO = static_cast<NT_TCXO>(raw_params.General_settings_TCXO_sel);
-		General_settings.LPF_EXE = static_cast<NT_LPF_Autocalibration_Execute>(raw_params.General_settings_LPF_EXE);
-		General_settings.LPF_ACS_S = static_cast<NT_LPF_Autocalibration_Status>(raw_params.General_settings_LPF_ACS_S);
-		General_settings.TS_EXE = static_cast<NT_Temp_Execute>(raw_params.General_settings_TS_EXE);
-		General_settings.TS_MD = static_cast<NT_Temp_Mode>(raw_params.General_settings_TS_MD);
-		General_settings.Ch_StNumSel = static_cast<NT_Channel_Status_Monitor>(raw_params.General_settings_Ch_StNumSel);
-		General_settings.StdBy_AOK = static_cast<NT_StdBy_AOK>(raw_params.General_settings_StdBy_AOK);
-		General_settings.RF_AGC_AOK = static_cast<NT_RF_AGC_AOK>(raw_params.General_settings_RF_AGC_AOK);
-		General_settings.PLL_VCO_AOK = static_cast<NT_PLL_VCO_AOK>(raw_params.General_settings_PLL_VCO_AOK);
-		General_settings.PLL_LI_AOK = static_cast<NT_PLL_LI_AOK>(raw_params.General_settings_PLL_LI_AOK);
-		General_settings.LPF_ACS_AOK = static_cast<NT_LPF_ACS_AOK>(raw_params.General_settings_LPF_ACS_AOK);
-		General_settings.TS_code = (raw_params.General_settings_TS_code_h << 8) | raw_params.General_settings_TS_code_l;
-		General_settings.AOK = static_cast<NT_AOK>(raw_params.General_settings_AOK);
-		General_settings.RF_GainSt = raw_params.General_settings_RF_GainSt * 0.95 + 11;
-		General_settings.RF_AGC_Up = static_cast<NT_RF_AGC>(raw_params.General_settings_RF_AGC);
-		General_settings.RF_AGC_Down = static_cast<NT_RF_AGC>(raw_params.General_settings_RF_AGC);
-		General_settings.IFA_GainSt = raw_params.General_settings_IFA_GainSt;
+		for (auto i = 0; i < 4; ++i) 
+			Channel_Settings[i].ConvertFromBinary(raw_params.Channel_Settings[i]);
 
-		Clock_settings.CDIV_R = raw_params.Clock_settings_CDIV_R;
-		Clock_settings.CLK_OL = static_cast<NT_CLK_OL>(raw_params.Clock_settings_CLK_OL);
-		Clock_settings.CLK_CC = static_cast<NT_CLK_CC>(raw_params.Clock_settings_CLK_CC);
-		Clock_settings.CLK_TP = static_cast<NT_CLK_TP>(raw_params.Clock_settings_CLK_TP);
-		Clock_settings.CLK_Source = static_cast<NT_CLK_Source>(raw_params.Clock_settings_CLK_Source);
-
-		Channel_settings[0].Ch_EN = static_cast<NT_Channel_EN>(raw_params.Channel_settings_Ch1_En);
-		Channel_settings[0].Ch_LSB = static_cast<NT_Channel_LSB>(raw_params.Channel_settings_Ch1_LSB);
-		Channel_settings[0].LPF_code = (raw_params.Channel_settings_Ch1_LPF_code + 29.74) / 3.422;
-		Channel_settings[0].IFA_OT = static_cast<NT_IFA_OT>(raw_params.Channel_settings_Ch1_IFA_OT);
-		Channel_settings[0].IFA_OP = static_cast<NT_IFA_OP>(raw_params.Channel_settings_Ch1_IFA_OP);
-		Channel_settings[0].IFA_AGC_MD = static_cast<NT_IFA_AGC_Mode>(raw_params.Channel_settings_Ch1_IFA_AGC_MD);
-		Channel_settings[0].RF_AGC_MD = static_cast<NT_RF_AGC_Mode>(raw_params.Channel_settings_Ch1_RF_AGC_MD);
-		Channel_settings[0].IFA_ResLoad = static_cast<NT_IFA_ResLoad>(raw_params.Channel_settings_Ch1_IFA_ResLoad);
-		Channel_settings[0].IFA_AmpLvl = static_cast<NT_IFA_Amp_LVL>(raw_params.Channel_settings_Ch1_IFA_AmpLvl);
-		Channel_settings[0].RF_AGC_LB = static_cast<NT_RF_AGC_LB>(raw_params.Channel_settings_Ch1_RF_AGC_LB);
-		Channel_settings[0].RF_AGC_UB = static_cast<NT_RF_AGC_UB>(raw_params.Channel_settings_Ch1_RF_AGC_UB);
-		Channel_settings[0].IFA_ManGC = static_cast<NT_IFA_Manual_Gain>((raw_params.Channel_settings_Ch1_IFA_ManGC_h << 3) | raw_params.Channel_settings_Ch1_IFA_ManGC_l);
-		Channel_settings[0].RF_Gain = raw_params.Channel_settings_Ch1_RF_Gain * 0.95 + 11;
-		Channel_settings[0].IFA_ADC_OL = static_cast<NT_IFA_ADC_OL>(raw_params.Channel_settings_Ch1_IFA_ADC_OL);
-		Channel_settings[0].IFA_ADC_Clk = static_cast<NT_IFA_ADC_Clk>(raw_params.Channel_settings_Ch1_IFA_ADC_Clk);
-
-		Channel_settings[1].Ch_EN = static_cast<NT_Channel_EN>(raw_params.Channel_settings_Ch2_En);
-		Channel_settings[1].Ch_LSB = static_cast<NT_Channel_LSB>(raw_params.Channel_settings_Ch2_LSB);
-		Channel_settings[1].LPF_code = (raw_params.Channel_settings_Ch2_LPF_code + 29.74) / 3.422;
-		Channel_settings[1].IFA_OT = static_cast<NT_IFA_OT>(raw_params.Channel_settings_Ch2_IFA_OT);
-		Channel_settings[1].IFA_OP = static_cast<NT_IFA_OP>(raw_params.Channel_settings_Ch2_IFA_OP);
-		Channel_settings[1].IFA_AGC_MD = static_cast<NT_IFA_AGC_Mode>(raw_params.Channel_settings_Ch2_IFA_AGC_MD);
-		Channel_settings[1].RF_AGC_MD = static_cast<NT_RF_AGC_Mode>(raw_params.Channel_settings_Ch2_RF_AGC_MD);
-		Channel_settings[1].IFA_ResLoad = static_cast<NT_IFA_ResLoad>(raw_params.Channel_settings_Ch2_IFA_ResLoad);
-		Channel_settings[1].IFA_AmpLvl = static_cast<NT_IFA_Amp_LVL>(raw_params.Channel_settings_Ch2_IFA_AmpLvl);
-		Channel_settings[1].RF_AGC_LB = static_cast<NT_RF_AGC_LB>(raw_params.Channel_settings_Ch2_RF_AGC_LB);
-		Channel_settings[1].RF_AGC_UB = static_cast<NT_RF_AGC_UB>(raw_params.Channel_settings_Ch2_RF_AGC_UB);
-		Channel_settings[1].IFA_ManGC = static_cast<NT_IFA_Manual_Gain>((raw_params.Channel_settings_Ch2_IFA_ManGC_h << 3) | raw_params.Channel_settings_Ch2_IFA_ManGC_l);
-		Channel_settings[1].RF_Gain = raw_params.Channel_settings_Ch2_RF_Gain * 0.95 + 11;
-		Channel_settings[1].IFA_ADC_OL = static_cast<NT_IFA_ADC_OL>(raw_params.Channel_settings_Ch2_IFA_ADC_OL);
-		Channel_settings[1].IFA_ADC_Clk = static_cast<NT_IFA_ADC_Clk>(raw_params.Channel_settings_Ch2_IFA_ADC_Clk);
-
-		Channel_settings[2].Ch_EN = static_cast<NT_Channel_EN>(raw_params.Channel_settings_Ch3_En);
-		Channel_settings[2].Ch_LSB = static_cast<NT_Channel_LSB>(raw_params.Channel_settings_Ch3_LSB);
-		Channel_settings[2].LPF_code = (raw_params.Channel_settings_Ch3_LPF_code + 29.74) / 3.422;
-		Channel_settings[2].IFA_OT = static_cast<NT_IFA_OT>(raw_params.Channel_settings_Ch3_IFA_OT);
-		Channel_settings[2].IFA_OP = static_cast<NT_IFA_OP>(raw_params.Channel_settings_Ch3_IFA_OP);
-		Channel_settings[2].IFA_AGC_MD = static_cast<NT_IFA_AGC_Mode>(raw_params.Channel_settings_Ch3_IFA_AGC_MD);
-		Channel_settings[2].RF_AGC_MD = static_cast<NT_RF_AGC_Mode>(raw_params.Channel_settings_Ch3_RF_AGC_MD);
-		Channel_settings[2].IFA_ResLoad = static_cast<NT_IFA_ResLoad>(raw_params.Channel_settings_Ch3_IFA_ResLoad);
-		Channel_settings[2].IFA_AmpLvl = static_cast<NT_IFA_Amp_LVL>(raw_params.Channel_settings_Ch3_IFA_AmpLvl);
-		Channel_settings[2].RF_AGC_LB = static_cast<NT_RF_AGC_LB>(raw_params.Channel_settings_Ch3_RF_AGC_LB);
-		Channel_settings[2].RF_AGC_UB = static_cast<NT_RF_AGC_UB>(raw_params.Channel_settings_Ch3_RF_AGC_UB);
-		Channel_settings[2].IFA_ManGC = static_cast<NT_IFA_Manual_Gain>((raw_params.Channel_settings_Ch3_IFA_ManGC_h << 3) | raw_params.Channel_settings_Ch3_IFA_ManGC_l);
-		Channel_settings[2].RF_Gain = raw_params.Channel_settings_Ch3_RF_Gain * 0.95 + 11;
-		Channel_settings[2].IFA_ADC_OL = static_cast<NT_IFA_ADC_OL>(raw_params.Channel_settings_Ch3_IFA_ADC_OL);
-		Channel_settings[2].IFA_ADC_Clk = static_cast<NT_IFA_ADC_Clk>(raw_params.Channel_settings_Ch3_IFA_ADC_Clk);
-
-		Channel_settings[3].Ch_EN = static_cast<NT_Channel_EN>(raw_params.Channel_settings_Ch4_En);
-		Channel_settings[3].Ch_LSB = static_cast<NT_Channel_LSB>(raw_params.Channel_settings_Ch4_LSB);
-		Channel_settings[3].LPF_code = (raw_params.Channel_settings_Ch4_LPF_code + 29.74) / 3.422;
-		Channel_settings[3].IFA_OT = static_cast<NT_IFA_OT>(raw_params.Channel_settings_Ch4_IFA_OT);
-		Channel_settings[3].IFA_OP = static_cast<NT_IFA_OP>(raw_params.Channel_settings_Ch4_IFA_OP);
-		Channel_settings[3].IFA_AGC_MD = static_cast<NT_IFA_AGC_Mode>(raw_params.Channel_settings_Ch4_IFA_AGC_MD);
-		Channel_settings[3].RF_AGC_MD = static_cast<NT_RF_AGC_Mode>(raw_params.Channel_settings_Ch4_RF_AGC_MD);
-		Channel_settings[3].IFA_ResLoad = static_cast<NT_IFA_ResLoad>(raw_params.Channel_settings_Ch4_IFA_ResLoad);
-		Channel_settings[3].IFA_AmpLvl = static_cast<NT_IFA_Amp_LVL>(raw_params.Channel_settings_Ch4_IFA_AmpLvl);
-		Channel_settings[3].RF_AGC_LB = static_cast<NT_RF_AGC_LB>(raw_params.Channel_settings_Ch4_RF_AGC_LB);
-		Channel_settings[3].RF_AGC_UB = static_cast<NT_RF_AGC_UB>(raw_params.Channel_settings_Ch4_RF_AGC_UB);
-		Channel_settings[3].IFA_ManGC = static_cast<NT_IFA_Manual_Gain>((raw_params.Channel_settings_Ch4_IFA_ManGC_h << 3) | raw_params.Channel_settings_Ch4_IFA_ManGC_l);
-		Channel_settings[3].RF_Gain = raw_params.Channel_settings_Ch4_RF_Gain * 0.95 + 11;
-		Channel_settings[3].IFA_ADC_OL = static_cast<NT_IFA_ADC_OL>(raw_params.Channel_settings_Ch4_IFA_ADC_OL);
-		Channel_settings[3].IFA_ADC_Clk = static_cast<NT_IFA_ADC_Clk>(raw_params.Channel_settings_Ch4_IFA_ADC_Clk);
-
-		PLL_settings[0].PLL_EN = static_cast<NT_PLL_Enable>(raw_params.PLL_settings_pllA_PLL_EN);
-		PLL_settings[0].PLL_Band = static_cast<NT_PLL_Band>(raw_params.PLL_settings_pllA_PLL_Band);
-		PLL_settings[0].NDiv_R = (raw_params.PLL_settings_pllA_NDiv_R_h << 1) | raw_params.PLL_settings_pllA_NDiv_R_l;
-		PLL_settings[0].PLL_EXE = static_cast<NT_PLL_EXE>(raw_params.PLL_settings_pllA_PLL_EXE);
-		PLL_settings[0].RDiv_R = raw_params.PLL_settings_pllA_RDiv_R;
-		PLL_settings[0].PLL_LI = static_cast<NT_PLL_Lock>(raw_params.PLL_settings_pllA_PLL_LI);
-		PLL_settings[0].Vco_CVH = static_cast<NT_Vco_CV>(raw_params.PLL_settings_pllA_Vco_CV);
-		PLL_settings[0].Vco_CVL = static_cast<NT_Vco_CV>(raw_params.PLL_settings_pllA_Vco_CV);
-
-		PLL_settings[1].PLL_EN = static_cast<NT_PLL_Enable>(raw_params.PLL_settings_pllB_PLL_EN);
-		PLL_settings[1].PLL_Band = static_cast<NT_PLL_Band>(raw_params.PLL_settings_pllB_PLL_Band);
-		PLL_settings[1].NDiv_R = (raw_params.PLL_settings_pllB_NDiv_R_h << 1) | raw_params.PLL_settings_pllB_NDiv_R_l;
-		PLL_settings[1].PLL_EXE = static_cast<NT_PLL_EXE>(raw_params.PLL_settings_pllB_PLL_EXE);
-		PLL_settings[1].RDiv_R = raw_params.PLL_settings_pllB_RDiv_R;
-		PLL_settings[1].PLL_LI = static_cast<NT_PLL_Lock>(raw_params.PLL_settings_pllB_PLL_LI);
-		PLL_settings[1].Vco_CVH = static_cast<NT_Vco_CV>(raw_params.PLL_settings_pllB_Vco_CV);
-		PLL_settings[1].Vco_CVL = static_cast<NT_Vco_CV>(raw_params.PLL_settings_pllB_Vco_CV);
+		for (auto i = 0; i < 2; ++i)
+			PLL_Settings[i].ConvertFromBinary(raw_params.PLL_Settings[i]);
+		
 	}
 
 	void FormBuffer() {
@@ -688,38 +574,38 @@ public:
 		registers[1] = (static_cast<std::uint8_t>(System_Info.ID_l) << 3) | static_cast<std::uint8_t>(System_Info.Release);
 
 		// General settings
-		registers[2] = static_cast<std::uint8_t>(General_settings.Mode);
-		registers[3] = (static_cast<std::uint8_t>(General_settings.TCXO) << 1) | static_cast<std::uint8_t>(General_settings.LO_Source);
-		registers[4] = (static_cast<std::uint8_t>(General_settings.LPF_ACS_S) << 1) | static_cast<std::uint8_t>(General_settings.LPF_EXE);
-		registers[5] = (static_cast<std::uint8_t>(General_settings.Ch_StNumSel) << 4) | (static_cast<std::uint8_t>(General_settings.TS_MD) << 1) |
-			static_cast<std::uint8_t>(General_settings.TS_EXE);
-		registers[6] = (static_cast<std::uint8_t>(General_settings.LPF_ACS_AOK) << 4) | (static_cast<std::uint8_t>(General_settings.PLL_LI_AOK) << 3) |
-			(static_cast<std::uint8_t>(General_settings.PLL_VCO_AOK) << 2) | (static_cast<std::uint8_t>(General_settings.RF_AGC_AOK) << 1) | static_cast<std::uint8_t>(General_settings.StdBy_AOK);
+		registers[2] = static_cast<std::uint8_t>(General_Settings.Mode);
+		registers[3] = (static_cast<std::uint8_t>(General_Settings.TCXO) << 1) | static_cast<std::uint8_t>(General_Settings.LO_Source);
+		registers[4] = (static_cast<std::uint8_t>(General_Settings.LPF_ACS_S) << 1) | static_cast<std::uint8_t>(General_Settings.LPF_EXE);
+		registers[5] = (static_cast<std::uint8_t>(General_Settings.Ch_StNumSel) << 4) | (static_cast<std::uint8_t>(General_Settings.TS_MD) << 1) |
+			static_cast<std::uint8_t>(General_Settings.TS_EXE);
+		registers[6] = (static_cast<std::uint8_t>(General_Settings.LPF_ACS_AOK) << 4) | (static_cast<std::uint8_t>(General_Settings.PLL_LI_AOK) << 3) |
+			(static_cast<std::uint8_t>(General_Settings.PLL_VCO_AOK) << 2) | (static_cast<std::uint8_t>(General_Settings.RF_AGC_AOK) << 1) | static_cast<std::uint8_t>(General_Settings.StdBy_AOK);
 
 		// Clock settings
-		registers[11] = Clock_settings.CDIV_R;
-		registers[12] = (static_cast<std::uint8_t>(Clock_settings.CLK_Source) << 5) | (static_cast<std::uint8_t>(Clock_settings.CLK_TP) << 4) |
-			(static_cast<std::uint8_t>(Clock_settings.CLK_CC) << 2) | static_cast<std::uint8_t>(Clock_settings.CLK_OL);
+		registers[11] = Clock_Settings.CDIV_R;
+		registers[12] = (static_cast<std::uint8_t>(Clock_Settings.CLK_Source) << 5) | (static_cast<std::uint8_t>(Clock_Settings.CLK_TP) << 4) |
+			(static_cast<std::uint8_t>(Clock_Settings.CLK_CC) << 2) | static_cast<std::uint8_t>(Clock_Settings.CLK_OL);
 
 		// Channel settings
 		for (auto i = 0; i < 4; ++i) {
-			registers[13 + 7 * i] = (static_cast<std::uint8_t>(Channel_settings[i].Ch_LSB) << 1) | static_cast<std::uint8_t>(Channel_settings[i].Ch_EN);
-			registers[14 + 7 * i] = static_cast<std::uint8_t>(std::ceil(Channel_settings[i].LPF_code * 3.422 - 29.74)); // Linear approximation (p. 16 ver. 2.05)
-			registers[15 + 7 * i] = (static_cast<std::uint8_t>(Channel_settings[i].IFA_AmpLvl) << 6) | (static_cast<std::uint8_t>(Channel_settings[i].IFA_ResLoad) << 5) |
-				(static_cast<std::uint8_t>(Channel_settings[i].RF_AGC_MD) << 4) | (static_cast<std::uint8_t>(Channel_settings[i].IFA_AGC_MD) << 3) |
-				(static_cast<std::uint8_t>(Channel_settings[i].IFA_OP) << 1) | static_cast<std::uint8_t>(Channel_settings[i].IFA_OT);
-			registers[16 + 7 * i] = (static_cast<std::uint8_t>(Channel_settings[i].RF_AGC_UB) << 4) | static_cast<std::uint8_t>(Channel_settings[i].RF_AGC_LB);
-			registers[17 + 7 * i] = (static_cast<std::uint8_t>((Channel_settings[i].RF_Gain - 11) / 0.95) << 4) | (static_cast<std::uint8_t>(Channel_settings[i].IFA_ManGC) >> 3);
-			registers[18 + 7 * i] = ((static_cast<std::uint8_t>(Channel_settings[i].IFA_ManGC) & 0x7) << 4) | static_cast<std::uint8_t>(Channel_settings[i].IFA_Gain);
-			registers[19 + 7 * i] = (static_cast<std::uint8_t>(Channel_settings[i].IFA_ADC_Clk) << 2) | static_cast<std::uint8_t>(Channel_settings[i].IFA_ADC_OL);
+			registers[13 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].Ch_LSB) << 1) | static_cast<std::uint8_t>(Channel_Settings[i].Ch_EN);
+			registers[14 + 7 * i] = static_cast<std::uint8_t>(std::ceil(Channel_Settings[i].LPF_code * 3.422 - 29.74)); // Linear approximation (p. 16 ver. 2.05)
+			registers[15 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].IFA_AmpLvl) << 6) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ResLoad) << 5) |
+				(static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_MD) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_AGC_MD) << 3) |
+				(static_cast<std::uint8_t>(Channel_Settings[i].IFA_OP) << 1) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_OT);
+			registers[16 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_UB) << 4) | static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_LB);
+			registers[17 + 7 * i] = (static_cast<std::uint8_t>((Channel_Settings[i].RF_Gain - 11) / 0.95) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) >> 3);
+			registers[18 + 7 * i] = ((static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) & 0x7) << 4) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_Gain);
+			registers[19 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ADC_Clk) << 2) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_ADC_OL);
 		}
 
 		// PLL settings
 		for (auto i = 0; i < 2; ++i) {
-			registers[41 + 4 * i] = (static_cast<std::uint8_t>(PLL_settings[i].PLL_Band) << 1) | static_cast<std::uint8_t>(PLL_settings[i].PLL_EN);
-			registers[42 + 4 * i] = static_cast<std::uint8_t>(PLL_settings[i].NDiv_R >> 1);
-			registers[43 + 4 * i] = ((static_cast<std::uint8_t>(PLL_settings[i].NDiv_R) & 0x1) << 7) | (PLL_settings[i].RDiv_R << 3) | static_cast<std::uint8_t>(PLL_settings[i].PLL_EXE);
-			registers[44 + 4 * i] = (static_cast<std::uint8_t>(PLL_settings[i].Vco_CVL) << 7) | static_cast<std::uint8_t>(PLL_settings[i].PLL_LI);
+			registers[41 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].PLL_Band) << 1) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_EN);
+			registers[42 + 4 * i] = static_cast<std::uint8_t>(PLL_Settings[i].NDiv_R >> 1);
+			registers[43 + 4 * i] = ((static_cast<std::uint8_t>(PLL_Settings[i].NDiv_R) & 0x1) << 7) | (PLL_Settings[i].RDiv_R << 3) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_EXE);
+			registers[44 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].Vco_CVL) << 7) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_LI);
 		}
 	}
 
@@ -940,4 +826,4 @@ public:
 #pragma warning(pop)
 #endif // WIN32
 
-#endif // !_NT_1065_SETUP_HPP_
+#endif // !_1065_SETUP_HPP_

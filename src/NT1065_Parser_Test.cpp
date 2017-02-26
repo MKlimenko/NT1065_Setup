@@ -26,119 +26,119 @@ namespace NT1065_Parser_Test
 	public:
 		TEST_METHOD(Test_Mode)
 		{
-			std::vector<NT1065_Params::NT_Mode> params;
+			std::vector<NT1065_Params::Mode> params;
 			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_Mode>(i));
+				params.push_back(static_cast<NT1065_Params::Mode>(i));
 			}
-			TestRoutine(params, p.General_settings.Mode);
+			TestRoutine(params, p.General_Settings.Mode);
 		}
 
 		TEST_METHOD(Test_TCXO)
 		{
-			std::vector<NT1065_Params::NT_TCXO> params;
+			std::vector<NT1065_Params::TCXO> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_TCXO>(i));
+				params.push_back(static_cast<NT1065_Params::TCXO>(i));
 			}
-			TestRoutine(params, p.General_settings.TCXO);
+			TestRoutine(params, p.General_Settings.TCXO);
 		}
 
 		TEST_METHOD(Test_LO_Source)
 		{
-			std::vector<NT1065_Params::NT_LO_Source> params;
+			std::vector<NT1065_Params::LO_Source> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_LO_Source>(i));
+				params.push_back(static_cast<NT1065_Params::LO_Source>(i));
 			}
-			TestRoutine(params, p.General_settings.LO_Source);
+			TestRoutine(params, p.General_Settings.LO_Source);
 		}
 
 		TEST_METHOD(Test_LPF_Autocalibration_Status)
 		{
-			std::vector<NT1065_Params::NT_LPF_Autocalibration_Status> params;
+			std::vector<NT1065_Params::LPF_Autocalibration_Status> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_LPF_Autocalibration_Status>(i));
+				params.push_back(static_cast<NT1065_Params::LPF_Autocalibration_Status>(i));
 			}
-			TestRoutine(params, p.General_settings.LPF_ACS_S);
+			TestRoutine(params, p.General_Settings.LPF_ACS_S);
 		}
 
 		TEST_METHOD(Test_LPF_Autocalibration_Execute)
 		{
-			std::vector<NT1065_Params::NT_LPF_Autocalibration_Execute> params;
+			std::vector<NT1065_Params::LPF_Autocalibration_Execute> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_LPF_Autocalibration_Execute>(i));
+				params.push_back(static_cast<NT1065_Params::LPF_Autocalibration_Execute>(i));
 			}
-			TestRoutine(params, p.General_settings.LPF_EXE);
+			TestRoutine(params, p.General_Settings.LPF_EXE);
 		}
 
 		TEST_METHOD(Test_Channel_Status_Monitor)
 		{
-			std::vector<NT1065_Params::NT_Channel_Status_Monitor> params;
+			std::vector<NT1065_Params::Channel_Status_Monitor> params;
 			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_Channel_Status_Monitor>(i));
+				params.push_back(static_cast<NT1065_Params::Channel_Status_Monitor>(i));
 			}
-			TestRoutine(params, p.General_settings.Ch_StNumSel);
+			TestRoutine(params, p.General_Settings.Ch_StNumSel);
 		}
 
 		TEST_METHOD(Test_Temp_Mode)
 		{
-			std::vector<NT1065_Params::NT_Temp_Mode> params;
+			std::vector<NT1065_Params::Temp_Mode> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_Temp_Mode>(i));
+				params.push_back(static_cast<NT1065_Params::Temp_Mode>(i));
 			}
-			TestRoutine(params, p.General_settings.TS_MD);
+			TestRoutine(params, p.General_Settings.TS_MD);
 		}
 
 		TEST_METHOD(Test_Temp_Execute)
 		{
-			std::vector<NT1065_Params::NT_Temp_Execute> params;
+			std::vector<NT1065_Params::Temp_Execute> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_Temp_Execute>(i));
+				params.push_back(static_cast<NT1065_Params::Temp_Execute>(i));
 			}
-			TestRoutine(params, p.General_settings.TS_EXE);
+			TestRoutine(params, p.General_Settings.TS_EXE);
 		}
 		
 		TEST_METHOD(Test_LPF_ACS_AOK)
 		{
-			std::vector<NT1065_Params::NT_LPF_ACS_AOK> params;
+			std::vector<NT1065_Params::LPF_ACS_AOK> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_LPF_ACS_AOK>(i));
+				params.push_back(static_cast<NT1065_Params::LPF_ACS_AOK>(i));
 			}
-			TestRoutine(params, p.General_settings.LPF_ACS_AOK);
+			TestRoutine(params, p.General_Settings.LPF_ACS_AOK);
 		}
 
 		TEST_METHOD(Test_LPF_LI_AOK)
 		{
-			std::vector<NT1065_Params::NT_PLL_LI_AOK> params;
+			std::vector<NT1065_Params::PLL_LI_AOK> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_PLL_LI_AOK>(i));
+				params.push_back(static_cast<NT1065_Params::PLL_LI_AOK>(i));
 			}
-			TestRoutine(params, p.General_settings.PLL_LI_AOK);
+			TestRoutine(params, p.General_Settings.PLL_LI_AOK);
 		}
 
 		TEST_METHOD(Test_PLL_VCO_AOK)
 		{
-			std::vector<NT1065_Params::NT_PLL_VCO_AOK> params;
+			std::vector<NT1065_Params::PLL_VCO_AOK> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_PLL_VCO_AOK>(i));
+				params.push_back(static_cast<NT1065_Params::PLL_VCO_AOK>(i));
 			}
-			TestRoutine(params, p.General_settings.PLL_VCO_AOK);
+			TestRoutine(params, p.General_Settings.PLL_VCO_AOK);
 		}
 
 		TEST_METHOD(Test_RF_AGC_AOK)
 		{
-			std::vector<NT1065_Params::NT_RF_AGC_AOK> params;
+			std::vector<NT1065_Params::RF_AGC_AOK> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_RF_AGC_AOK>(i));
+				params.push_back(static_cast<NT1065_Params::RF_AGC_AOK>(i));
 			}
-			TestRoutine(params, p.General_settings.RF_AGC_AOK);
+			TestRoutine(params, p.General_Settings.RF_AGC_AOK);
 		}
 
 		TEST_METHOD(Test_StdBy_AOK)
 		{
-			std::vector<NT1065_Params::NT_StdBy_AOK> params;
+			std::vector<NT1065_Params::StdBy_AOK> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_StdBy_AOK>(i));
+				params.push_back(static_cast<NT1065_Params::StdBy_AOK>(i));
 			}
-			TestRoutine(params, p.General_settings.StdBy_AOK);
+			TestRoutine(params, p.General_Settings.StdBy_AOK);
 		}
 
 		TEST_METHOD(Test_CDIV_R)
@@ -147,43 +147,43 @@ namespace NT1065_Parser_Test
 			for (auto i = 8; i < 32; ++i) {
 				params.push_back(i);
 			}
-			TestRoutine(params, p.Clock_settings.CDIV_R);
+			TestRoutine(params, p.Clock_Settings.CDIV_R);
 		}
 
 		TEST_METHOD(Test_CLK_Source)
 		{
-			std::vector<NT1065_Params::NT_CLK_Source> params;
+			std::vector<NT1065_Params::CLK_Source> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_CLK_Source>(i));
+				params.push_back(static_cast<NT1065_Params::CLK_Source>(i));
 			}
-			TestRoutine(params, p.Clock_settings.CLK_Source);
+			TestRoutine(params, p.Clock_Settings.CLK_Source);
 		}
 
 		TEST_METHOD(Test_CLK_TP)
 		{
-			std::vector<NT1065_Params::NT_CLK_TP> params;
+			std::vector<NT1065_Params::CLK_TP> params;
 			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_CLK_TP>(i));
+				params.push_back(static_cast<NT1065_Params::CLK_TP>(i));
 			}
-			TestRoutine(params, p.Clock_settings.CLK_TP);
+			TestRoutine(params, p.Clock_Settings.CLK_TP);
 		}
 
 		TEST_METHOD(Test_CLK_CC)
 		{
-			std::vector<NT1065_Params::NT_CLK_CC> params;
+			std::vector<NT1065_Params::CLK_CC> params;
 			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_CLK_CC>(i));
+				params.push_back(static_cast<NT1065_Params::CLK_CC>(i));
 			}
-			TestRoutine(params, p.Clock_settings.CLK_CC);
+			TestRoutine(params, p.Clock_Settings.CLK_CC);
 		}
 
 		TEST_METHOD(Test_CLK_OL)
 		{
-			std::vector<NT1065_Params::NT_CLK_OL> params;
+			std::vector<NT1065_Params::CLK_OL> params;
 			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::NT_CLK_OL>(i));
+				params.push_back(static_cast<NT1065_Params::CLK_OL>(i));
 			}
-			TestRoutine(params, p.Clock_settings.CLK_OL);
+			TestRoutine(params, p.Clock_Settings.CLK_OL);
 		}
 	};
 }
