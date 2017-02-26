@@ -479,39 +479,37 @@ public:
 		std::uint8_t RDiv_R = 1;
 		PLL_EXE PLL_EXE = PLL_EXE::start;
 
-		Vco_CV Vco_CVL = Vco_CV::valid;
-		Vco_CV Vco_CVH = Vco_CV::valid;
+		Vco_CV Vco_CV = Vco_CV::valid;
 		PLL_Lock PLL_LI = PLL_Lock::locked;
 
 #pragma pack(push)
 #pragma pack(1)
 		struct binary {
-			std::uint8_t PLL_Settings_pllA_PLL_EN : 1;
-			std::uint8_t PLL_Settings_pllA_PLL_Band : 1;
-			std::uint8_t PLL_Settings_pllA_reserved_0 : 6;
+			std::uint8_t PLL_Settings_PLL_EN : 1;
+			std::uint8_t PLL_Settings_PLL_Band : 1;
+			std::uint8_t PLL_Settings_reserved_0 : 6;
 
-			std::uint8_t PLL_Settings_pllA_NDiv_R_h : 8;
+			std::uint8_t PLL_Settings_NDiv_R_h : 8;
 
-			std::uint8_t PLL_Settings_pllA_PLL_EXE : 1;
-			std::uint8_t PLL_Settings_pllA_reserved_1 : 2;
-			std::uint8_t PLL_Settings_pllA_RDiv_R : 4;
-			std::uint8_t PLL_Settings_pllA_NDiv_R_l : 1;
+			std::uint8_t PLL_Settings_PLL_EXE : 1;
+			std::uint8_t PLL_Settings_reserved_1 : 2;
+			std::uint8_t PLL_Settings_RDiv_R : 4;
+			std::uint8_t PLL_Settings_NDiv_R_l : 1;
 
-			std::uint8_t PLL_Settings_pllA_PLL_LI : 1;
-			std::uint8_t PLL_Settings_pllA_Vco_CV : 2;
-			std::uint8_t PLL_Settings_pllA_reserved_2 : 5;
+			std::uint8_t PLL_Settings_PLL_LI : 1;
+			std::uint8_t PLL_Settings_Vco_CV : 2;
+			std::uint8_t PLL_Settings_reserved_2 : 5;
 		};
 #pragma pack(pop)
 		
 		void ConvertFromBinary(const binary &b) {
-			PLL_EN = static_cast<NT1065_Params::PLL_Enable>(b.PLL_Settings_pllA_PLL_EN);
-			PLL_Band = static_cast<NT1065_Params::PLL_Band>(b.PLL_Settings_pllA_PLL_Band);
-			NDiv_R = (b.PLL_Settings_pllA_NDiv_R_h << 1) | b.PLL_Settings_pllA_NDiv_R_l;
-			PLL_EXE = static_cast<NT1065_Params::PLL_EXE>(b.PLL_Settings_pllA_PLL_EXE);
-			RDiv_R = b.PLL_Settings_pllA_RDiv_R;
-			PLL_LI = static_cast<NT1065_Params::PLL_Lock>(b.PLL_Settings_pllA_PLL_LI);
-			Vco_CVH = static_cast<NT1065_Params::Vco_CV>(b.PLL_Settings_pllA_Vco_CV);
-			Vco_CVL = static_cast<NT1065_Params::Vco_CV>(b.PLL_Settings_pllA_Vco_CV);
+			PLL_EN = static_cast<NT1065_Params::PLL_Enable>(b.PLL_Settings_PLL_EN);
+			PLL_Band = static_cast<NT1065_Params::PLL_Band>(b.PLL_Settings_PLL_Band);
+			NDiv_R = (b.PLL_Settings_NDiv_R_h << 1) | b.PLL_Settings_NDiv_R_l;
+			PLL_EXE = static_cast<NT1065_Params::PLL_EXE>(b.PLL_Settings_PLL_EXE);
+			RDiv_R = b.PLL_Settings_RDiv_R;
+			PLL_LI = static_cast<NT1065_Params::PLL_Lock>(b.PLL_Settings_PLL_LI);
+			Vco_CV = static_cast<NT1065_Params::Vco_CV>(b.PLL_Settings_Vco_CV);
 		}
 	} PLL_Settings[2];
 
@@ -590,13 +588,13 @@ public:
 		// Channel settings
 		for (auto i = 0; i < 4; ++i) {
 			registers[13 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].Ch_LSB) << 1) | static_cast<std::uint8_t>(Channel_Settings[i].Ch_EN);
-			registers[14 + 7 * i] = static_cast<std::uint8_t>(std::ceil(Channel_Settings[i].LPF_code * 3.422 - 29.74)); // Linear approximation (p. 16 ver. 2.05)
+			registers[14 + 7 * i] = static_cast<std::uint8_t>(std::floor(Channel_Settings[i].LPF_code * 3.422 - 29.74 + 0.5)); // Linear approximation (p. 16 ver. 2.05)
 			registers[15 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].IFA_AmpLvl) << 6) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ResLoad) << 5) |
 				(static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_MD) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_AGC_MD) << 3) |
 				(static_cast<std::uint8_t>(Channel_Settings[i].IFA_OP) << 1) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_OT);
 			registers[16 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_UB) << 4) | static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_LB);
-			registers[17 + 7 * i] = (static_cast<std::uint8_t>((Channel_Settings[i].RF_Gain - 11) / 0.95) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) >> 3);
-			registers[18 + 7 * i] = ((static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) & 0x7) << 4) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_Gain);
+			registers[17 + 7 * i] = (static_cast<std::uint8_t>(static_cast<std::uint32_t>(std::floor(0.5 + (Channel_Settings[i].RF_Gain - 11) / 0.95))) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) >> 3);
+			registers[18 + 7 * i] = ((static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) & 0x7) << 5) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_Gain);
 			registers[19 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ADC_Clk) << 2) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_ADC_OL);
 		}
 
@@ -605,7 +603,7 @@ public:
 			registers[41 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].PLL_Band) << 1) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_EN);
 			registers[42 + 4 * i] = static_cast<std::uint8_t>(PLL_Settings[i].NDiv_R >> 1);
 			registers[43 + 4 * i] = ((static_cast<std::uint8_t>(PLL_Settings[i].NDiv_R) & 0x1) << 7) | (PLL_Settings[i].RDiv_R << 3) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_EXE);
-			registers[44 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].Vco_CVL) << 7) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_LI);
+			registers[44 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].Vco_CV) << 1) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_LI);
 		}
 	}
 

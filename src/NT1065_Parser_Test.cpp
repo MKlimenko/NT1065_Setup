@@ -11,6 +11,17 @@ namespace NT1065_Parser_Test
 		NT1065_Params p;
 
 		template<typename T>
+		bool Compare(const T& first, const T& second) {
+			return first != second;
+		}
+
+		bool Compare(double first, double second) {
+			std::int64_t f = static_cast<std::int64_t>(std::ceil(first * 10));
+			std::int64_t s = static_cast<std::int64_t>(std::ceil(second * 10));
+			return f != s;
+		}
+
+		template<typename T>
 		void TestRoutine(const std::vector<T> &params, T &param_to_compare) {
 			for (auto &el : params) {
 				param_to_compare = el;
@@ -18,172 +29,284 @@ namespace NT1065_Parser_Test
 				auto result_pre = p.GetBuffer();
 				p.AssignBuffer(result_pre.data());
 				p.ParseBuffer();
-				if (param_to_compare != el)
+				if (Compare(param_to_compare, el)) {
+					std::string msg = "Failed on: " + std::to_string(static_cast<double>(param_to_compare)) + ", " + std::to_string(static_cast<double>(el));
+					Logger::WriteMessage(msg.c_str());
 					Assert::Fail();
+				}
 			}
 		}
-	
+
+		template <typename T>
+		void CommonTest(T &param_to_test, const std::vector<T> &params) {
+			TestRoutine(params, param_to_test);
+		}
+
+		template <typename T>
+		void CommonTest(T &param_to_test, std::size_t num_of_params) {
+			std::vector<T> params;
+			for (auto i = 0; i < num_of_params; ++i)
+				params.push_back(static_cast<T>(i));
+			CommonTest(param_to_test, params);
+		}
+					
 	public:
 		TEST_METHOD(Test_Mode)
 		{
-			std::vector<NT1065_Params::Mode> params;
-			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::Mode>(i));
-			}
-			TestRoutine(params, p.General_Settings.Mode);
+			CommonTest(p.General_Settings.Mode, 4);
 		}
 
 		TEST_METHOD(Test_TCXO)
 		{
-			std::vector<NT1065_Params::TCXO> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::TCXO>(i));
-			}
-			TestRoutine(params, p.General_Settings.TCXO);
+			CommonTest(p.General_Settings.TCXO, 2);
 		}
 
 		TEST_METHOD(Test_LO_Source)
 		{
-			std::vector<NT1065_Params::LO_Source> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::LO_Source>(i));
-			}
-			TestRoutine(params, p.General_Settings.LO_Source);
+			CommonTest(p.General_Settings.LO_Source, 2);
 		}
 
 		TEST_METHOD(Test_LPF_Autocalibration_Status)
 		{
-			std::vector<NT1065_Params::LPF_Autocalibration_Status> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::LPF_Autocalibration_Status>(i));
-			}
-			TestRoutine(params, p.General_Settings.LPF_ACS_S);
+			CommonTest(p.General_Settings.LPF_ACS_S, 2);
 		}
 
 		TEST_METHOD(Test_LPF_Autocalibration_Execute)
 		{
-			std::vector<NT1065_Params::LPF_Autocalibration_Execute> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::LPF_Autocalibration_Execute>(i));
-			}
-			TestRoutine(params, p.General_Settings.LPF_EXE);
+			CommonTest(p.General_Settings.LPF_EXE, 2);
 		}
 
 		TEST_METHOD(Test_Channel_Status_Monitor)
 		{
-			std::vector<NT1065_Params::Channel_Status_Monitor> params;
-			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::Channel_Status_Monitor>(i));
-			}
-			TestRoutine(params, p.General_Settings.Ch_StNumSel);
+			CommonTest(p.General_Settings.Ch_StNumSel, 4);
 		}
 
 		TEST_METHOD(Test_Temp_Mode)
 		{
-			std::vector<NT1065_Params::Temp_Mode> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::Temp_Mode>(i));
-			}
-			TestRoutine(params, p.General_Settings.TS_MD);
+			CommonTest(p.General_Settings.TS_MD, 2);
 		}
 
 		TEST_METHOD(Test_Temp_Execute)
 		{
-			std::vector<NT1065_Params::Temp_Execute> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::Temp_Execute>(i));
-			}
-			TestRoutine(params, p.General_Settings.TS_EXE);
+			CommonTest(p.General_Settings.TS_EXE, 2);
 		}
 		
 		TEST_METHOD(Test_LPF_ACS_AOK)
 		{
-			std::vector<NT1065_Params::LPF_ACS_AOK> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::LPF_ACS_AOK>(i));
-			}
-			TestRoutine(params, p.General_Settings.LPF_ACS_AOK);
+			CommonTest(p.General_Settings.LPF_ACS_AOK, 2);
 		}
 
 		TEST_METHOD(Test_LPF_LI_AOK)
 		{
-			std::vector<NT1065_Params::PLL_LI_AOK> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::PLL_LI_AOK>(i));
-			}
-			TestRoutine(params, p.General_Settings.PLL_LI_AOK);
+			CommonTest(p.General_Settings.PLL_LI_AOK, 2);
 		}
 
 		TEST_METHOD(Test_PLL_VCO_AOK)
 		{
-			std::vector<NT1065_Params::PLL_VCO_AOK> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::PLL_VCO_AOK>(i));
-			}
-			TestRoutine(params, p.General_Settings.PLL_VCO_AOK);
+			CommonTest(p.General_Settings.PLL_VCO_AOK, 2);
 		}
 
 		TEST_METHOD(Test_RF_AGC_AOK)
 		{
-			std::vector<NT1065_Params::RF_AGC_AOK> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::RF_AGC_AOK>(i));
-			}
-			TestRoutine(params, p.General_Settings.RF_AGC_AOK);
+			CommonTest(p.General_Settings.RF_AGC_AOK, 2);
 		}
 
 		TEST_METHOD(Test_StdBy_AOK)
 		{
-			std::vector<NT1065_Params::StdBy_AOK> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::StdBy_AOK>(i));
-			}
-			TestRoutine(params, p.General_Settings.StdBy_AOK);
+			CommonTest(p.General_Settings.StdBy_AOK, 2);
 		}
 
 		TEST_METHOD(Test_CDIV_R)
 		{
 			std::vector<std::uint8_t> params;
-			for (auto i = 8; i < 32; ++i) {
+			for (auto i = 8; i < 32; ++i) 
 				params.push_back(i);
-			}
-			TestRoutine(params, p.Clock_Settings.CDIV_R);
+			CommonTest(p.Clock_Settings.CDIV_R, params);
 		}
 
 		TEST_METHOD(Test_CLK_Source)
 		{
-			std::vector<NT1065_Params::CLK_Source> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::CLK_Source>(i));
-			}
-			TestRoutine(params, p.Clock_Settings.CLK_Source);
+			CommonTest(p.Clock_Settings.CLK_Source, 2);
 		}
 
 		TEST_METHOD(Test_CLK_TP)
 		{
-			std::vector<NT1065_Params::CLK_TP> params;
-			for (auto i = 0; i < 2; ++i) {
-				params.push_back(static_cast<NT1065_Params::CLK_TP>(i));
-			}
-			TestRoutine(params, p.Clock_Settings.CLK_TP);
+			CommonTest(p.Clock_Settings.CLK_TP, 2);
 		}
 
 		TEST_METHOD(Test_CLK_CC)
 		{
-			std::vector<NT1065_Params::CLK_CC> params;
-			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::CLK_CC>(i));
-			}
-			TestRoutine(params, p.Clock_Settings.CLK_CC);
+			CommonTest(p.Clock_Settings.CLK_CC, 4);
 		}
 
 		TEST_METHOD(Test_CLK_OL)
 		{
-			std::vector<NT1065_Params::CLK_OL> params;
-			for (auto i = 0; i < 4; ++i) {
-				params.push_back(static_cast<NT1065_Params::CLK_OL>(i));
+			CommonTest(p.Clock_Settings.CLK_OL, 4);
+		}
+		
+		TEST_METHOD(Test_Channel_LSB)
+		{
+			for (auto channel = 0; channel < 4; ++channel) 
+				CommonTest(p.Channel_Settings[channel].Ch_LSB, 2);
+		}
+
+		TEST_METHOD(Test_Channel_En)
+		{
+			for (auto channel = 0; channel < 4; ++channel) 
+				CommonTest(p.Channel_Settings[channel].Ch_EN, 2);
+		}
+
+		TEST_METHOD(Test_Channel_LPF_code)
+		{
+			for (auto channel = 0; channel < 4; ++channel) {
+				std::vector<double> params = { 11.22, 14.83, 15.12, 15.69, 16.59, 17.60, 18.33, 19.36, 20.31, 21.13,
+					21.92, 21.89, 23.82, 24.94, 25.45, 26.50, 27.38, 28.31, 29.02, 29.64, 30.47, 31.19, 31.55, 43.41, };
+				CommonTest(p.Channel_Settings[channel].LPF_code, params);
 			}
-			TestRoutine(params, p.Clock_Settings.CLK_OL);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_OT)
+		{
+			for (auto channel = 0; channel < 4; ++channel) 
+				CommonTest(p.Channel_Settings[channel].IFA_OT, 2);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_OP)
+		{
+			for (auto channel = 0; channel < 4; ++channel) 
+				CommonTest(p.Channel_Settings[channel].IFA_OP, 4);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_AGC_MD)
+		{
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_AGC_MD, 2);
+		}
+
+		TEST_METHOD(Test_Channel_RF_AGC_MD)
+		{
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].RF_AGC_MD, 2);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_ResLoad)
+		{
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_ResLoad, 2);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_AmpLvl)
+		{
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_AmpLvl, 2);
+		}
+
+		TEST_METHOD(Test_Channel_RF_AGC_LB)
+		{
+			std::vector<NT1065_Params::RF_AGC_LB> params;
+			for (auto i = 3; i < 8; ++i) 
+				params.push_back(static_cast<NT1065_Params::RF_AGC_LB>(i));
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].RF_AGC_LB, params);
+		}
+
+		TEST_METHOD(Test_Channel_RF_AGC_UB)
+		{
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].RF_AGC_UB, 6);
+		}
+
+		TEST_METHOD(Test_Channel_RF_Gain)
+		{
+			std::vector<double> params;
+			for (auto i = 11.0; i <= 25.5; i += 0.95)
+				params.push_back(i);
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].RF_Gain, params);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_ManGC)
+		{
+			std::vector<std::int32_t> params_tmp = { 0, 3, 7, 10, 14, 17, 21, 23 };
+			std::vector<NT1065_Params::IFA_Manual_Gain> params;
+			for (auto i = 0; i < params_tmp.size(); ++i)
+				params.push_back(static_cast<NT1065_Params::IFA_Manual_Gain>(params_tmp[i]));
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_ManGC, params);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_Gain)
+		{
+			std::vector<NT1065_Params::IFA_Gain> params;
+			for (auto i = 7; i < 26; ++i)
+				params.push_back(static_cast<NT1065_Params::IFA_Gain>(i));
+
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_Gain, params);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_ADC_Clk)
+		{
+			std::vector<NT1065_Params::IFA_ADC_Clk> params;
+			for (auto i = 1; i < 4; ++i)
+				params.push_back(static_cast<NT1065_Params::IFA_ADC_Clk>(i));
+
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_ADC_Clk, params);
+		}
+
+		TEST_METHOD(Test_Channel_IFA_ADC_OL)
+		{
+			for (auto channel = 0; channel < 4; ++channel)
+				CommonTest(p.Channel_Settings[channel].IFA_ADC_OL, 4);
+		}
+
+		TEST_METHOD(Test_PLL_Band)
+		{
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].PLL_Band, 2);
+		}
+
+		TEST_METHOD(Test_PLL_En)
+		{
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].PLL_EN, 2);
+		}
+
+		TEST_METHOD(Test_PLL_NDiv_R)
+		{
+			std::vector<std::uint32_t> params;
+			for (auto i = 48; i < 512; ++i)
+				params.push_back(i);
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].NDiv_R, params);
+		}
+
+		TEST_METHOD(Test_PLL_RDiv_R)
+		{
+			std::vector<std::uint8_t> params;
+			for (auto i = 1; i < 16; ++i)
+				params.push_back(i);
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].RDiv_R, params);
+		}
+
+		TEST_METHOD(Test_PLL_EXE)
+		{
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].PLL_EXE, 2);
+		}
+
+		TEST_METHOD(Test_PLL_Vco_CV)
+		{
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].Vco_CV, 3);
+		}
+		
+		TEST_METHOD(Test_PLL_LI)
+		{
+			for (auto PLL = 0; PLL < 2; ++PLL)
+				CommonTest(p.PLL_Settings[PLL].PLL_LI, 2);
 		}
 	};
 }
