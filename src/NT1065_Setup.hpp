@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 
+///<summary>Class for holding the NT1065 parameters</summary>
 class NT1065_Params {
 public:
 	NT1065_Params() {
@@ -15,6 +16,7 @@ public:
 	}
 
 #pragma region enums
+	///<summary>NT1065 mode</summary>
 	enum class Mode {
 		standby = 0,
 		PLL_A,
@@ -22,26 +24,31 @@ public:
 		active,
 	};
 
+	///<summary>Base frequency</summary>
 	enum class TCXO {
 		MHz_10 = 0,
 		MHz_24_84,
 	};
 
+	///<summary>Heterodyne source</summary>
 	enum class LO_Source {
-		PLL_A_Only = 0,
-		PLL_A_B,
+		PLL_A_Only = 0,		///<summary>PLL A for all of the channels</summary>
+		PLL_A_B,			///<summary>PLL A for channels 1 and 2, PLL B for 3 and 4</summary>
 	};
 
+	///<summary>LPF Auto-calibration system status</summary>
 	enum class LPF_Autocalibration_Status {
 		error = 0,
 		success,
 	};
 
+	///<summary>LPF Auto-calibration system execute</summary>
 	enum class LPF_Autocalibration_Execute {
 		finished = 0,
 		start
 	};
 
+	///<summary>Channel to be monitored for status</summary>
 	enum class Channel_Status_Monitor {
 		channel_1 = 0,
 		channel_2,
@@ -49,46 +56,55 @@ public:
 		channel_4,
 	};
 
+	///<summary>Temperature measurement mode</summary>
 	enum class Temp_Mode {
 		single = 0,
 		continuous,
 	};
 
+	///<summary>Temperature measurement system execute</summary>
 	enum class Temp_Execute {
 		finished = 0,
 		start,
 	};
 
+	///<summary>LPF auto-calibration system status as AOK component</summary>
 	enum class LPF_ACS_AOK {
 		forbidden = 0,
 		permitted
 	};
 
+	///<summary>PLL lock indicator status as AOK component</summary>
 	enum class PLL_LI_AOK {
 		forbidden = 0,
 		permitted
 	};
 
+	///<summary>PLL VCO input voltage comparator status as AOK component</summary>
 	enum class PLL_VCO_AOK {
 		forbidden = 0,
 		permitted
 	};
 
+	///<summary>RF AGC indicator status as AOK component</summary>
 	enum class RF_AGC_AOK {
 		forbidden = 0,
 		permitted
 	};
 
+	///<summary>IC standby mode status as AOK component</summary>
 	enum class StdBy_AOK {
 		forbidden = 0,
 		permitted
 	};
 
+	///<summary>Cumulative status indicator</summary>
 	enum class AOK {
 		fail = 0,
 		valid
 	};
 
+	///<summary>RF AGC idnicator</summary>
 	enum class RF_AGC {
 		input_ok = 0,
 		input_lower,
@@ -96,16 +112,19 @@ public:
 		impossible_AGC_damaged,
 	};
 
+	///<summary>Clock frequency source</summary>
 	enum class CLK_Source {
 		PLL_A = 0,
 		PLL_B
 	};
 
+	///<summary>Clock type</summary>
 	enum class CLK_TP {
 		CMOS = 0,
 		LVDS
 	};
 
+	///<summary>Clock amplitude</summary>
 	enum class CLK_CC {
 		V_0_23 = 0,
 		V_0_34,
@@ -113,43 +132,51 @@ public:
 		V_0_56,
 	};
 
-	enum class CLK_OL {
+	///<summary>Clock output DC for LVDS type</summary>
+		enum class CLK_OL {
 		level_1_8 = 0,
 		level_2_4,
 		level_2_7,
 		level_external,
 	};
 
-	enum class Channel_LSB {
+		///<summary>Channel sideband</summary>
+		enum class Channel_LSB {
 		USB = 0,
 		LSB,
 	};
 
+	///<summary>Channel enable</summary>
 	enum class Channel_EN {
 		disabled = 0,
 		enabled
 	};
 
+	///<summary>IF AGC threshold</summary>
 	enum class IFA_Amp_LVL {
 		mV_200 = 0,
 		mV_400
 	};
 
+	///<summary>Channel output load 200 Ohm external resistor</summary>
 	enum class IFA_ResLoad {
 		not_mounted = 0,
 		mounted
 	};
 
+	///<summary>RF gain control mode</summary>
 	enum class RF_AGC_Mode {
 		manual = 0,
 		AGC
 	};
 
+	///<summary>IFA gain control mode</summary>
 	enum class IFA_AGC_Mode {
 		manual = 0,
 		AGC
 	};
 
+	///<summary>IFA output DC level</summary>
 	enum class IFA_OP {
 		level_1_55 = 0,
 		level_1_75,
@@ -157,11 +184,13 @@ public:
 		level_2_00
 	};
 
+	///<summary>Output iterface</summary>
 	enum class IFA_OT {
 		analog = 0,
 		sg_mg
 	};
 
+	///<summary>RF AGC upper threshold</summary>
 	enum class RF_AGC_UB {
 		minus_47_dBm = 0,
 		minus_45_dBm,
@@ -171,6 +200,7 @@ public:
 		minus_40_dBm,
 	};
 
+	///<summary>RF AGC lower threshold</summary>
 	enum class RF_AGC_LB {
 		minus_49_dBm = 3,
 		minus_46_dBm,
@@ -179,6 +209,7 @@ public:
 		minus_42_dBm,
 	};
 
+	///<summary>IFA coarse gain value in manual mode</summary>
 	enum class IFA_Manual_Gain {
 		minus_0_5_dB = 0,
 		plus_10_5_dB = 3,
@@ -189,7 +220,8 @@ public:
 		plus_61_dB = 21,
 		plus_63_dB = 23,
 	};
-
+	
+	///<summary>IFA fine gain value</summary>
 	enum class IFA_Gain {
 		minus_0_35_dB = 7,
 		minus_0_3_dB,
@@ -212,12 +244,14 @@ public:
 		plus_5_1_dB,
 	};
 
+	///<summary>ADC type</summary>
 	enum class IFA_ADC_Clk {
 		asyncronous = 1,
 		rising_edge,
 		falling_edge
 	};
 
+	///<summary>ADC output logic-level high</summary>
 	enum class IFA_ADC_OL {
 		V_1_8 = 0,
 		V_2_4,
@@ -225,33 +259,39 @@ public:
 		V_external
 	};
 
+	///<summary>PLL frequency band</summary>
 	enum class PLL_Band {
 		L2_L3_L5 = 0,
 		L1
 	};
 
+	///<summary>PLL enable</summary>
 	enum class PLL_Enable {
 		disabled = 0,
 		enabled
 	};
 
+	///<summary>PLL tuning system execute</summary>
 	enum class PLL_EXE {
 		finished = 0,
 		start
 	};
 
+	///<summary>VCO input voltage indication</summary>
 	enum class Vco_CV {
 		valid = 0,
 		upper_exceeded,
 		lower_exceeded
 	};
-
+	
+	///<summary>PLL lock indicator</summary>
 	enum class PLL_Lock {
 		not_locked = 0,
 		locked
 	};
 #pragma endregion enums
 
+	///<summary>System information struct</summary>
 	struct System_Info {
 		std::uint32_t ID_h = 0x42;
 		std::uint32_t ID_l = 0x9;
@@ -259,6 +299,7 @@ public:
 
 #pragma pack(push)
 #pragma pack(1)
+		///<summary>Binary representation</summary>
 		struct binary {
 			std::uint8_t ID_h : 8;
 
@@ -267,6 +308,8 @@ public:
 		};
 #pragma pack(pop)
 
+		///<summary>Convert from binary representaion to the standalone variables</summary>
+		///<param name='b'>Binary object</param>
 		void ConvertFromBinary(const binary &b) {
 			ID_h = b.ID_h;
 			ID_l = b.ID_l;
@@ -274,6 +317,7 @@ public:
 		}
 	} System_Info;
 
+	///<summary>NT1065 general settings</summary>
 	struct General_Settings {
 		Mode Mode = Mode::active;
 		TCXO TCXO = TCXO::MHz_10;
@@ -301,6 +345,7 @@ public:
 
 #pragma pack(push)
 #pragma pack(1)
+		///<summary>Binary representation</summary>
 		struct binary{
 			std::uint8_t General_Settings_Mode : 2;
 			std::uint8_t General_Settings_reserved_0 : 6;
@@ -343,6 +388,8 @@ public:
 		};
 #pragma pack(pop)
 
+		///<summary>Convert from binary representaion to the standalone variables</summary>
+		///<param name='b'>Binary object</param>
 		void ConvertFromBinary(const binary &b) {
 			Mode = static_cast<NT1065_Params::Mode>(b.General_Settings_Mode);
 			LO_Source = static_cast<NT1065_Params::LO_Source>(b.General_Settings_LO_Source);
@@ -366,6 +413,7 @@ public:
 		}
 	} General_Settings;
 
+	///<summary>NT1065 clock settings</summary>
 	struct Clock_Settings {
 		std::uint8_t CDIV_R = 8;
 		CLK_Source CLK_Source = CLK_Source::PLL_A;
@@ -375,6 +423,7 @@ public:
 
 #pragma pack(push)
 #pragma pack(1)
+		///<summary>Binary representation</summary>
 		struct binary{
 			std::uint8_t Clock_Settings_CDIV_R : 5;
 			std::uint8_t Clock_Settings_reserved_9 : 3;
@@ -387,6 +436,8 @@ public:
 		};
 #pragma pack(pop)
 
+		///<summary>Convert from binary representaion to the standalone variables</summary>
+		///<param name='b'>Binary object</param>
 		void ConvertFromBinary(const binary &b) {			
 			CDIV_R = b.Clock_Settings_CDIV_R;
 			CLK_OL = static_cast<NT1065_Params::CLK_OL>(b.Clock_Settings_CLK_OL);
@@ -397,6 +448,7 @@ public:
 
 	} Clock_Settings;
 
+	///<summary>NT1065 channel settings</summary>
 	struct Channel_Settings {
 		Channel_LSB Ch_LSB = Channel_LSB::LSB;
 		Channel_EN Ch_EN = Channel_EN::enabled;
@@ -419,6 +471,7 @@ public:
 
 #pragma pack(push)
 #pragma pack(1)
+		///<summary>Binary representation</summary>
 		struct binary {
 			std::uint8_t Channel_Settings_En : 1;
 			std::uint8_t Channel_Settings_LSB : 1;
@@ -453,6 +506,8 @@ public:
 		};
 #pragma pack(pop)
 
+		///<summary>Convert from binary representaion to the standalone variables</summary>
+		///<param name='b'>Binary object</param>
 		void ConvertFromBinary(const binary &b) {
 			Ch_EN = static_cast<NT1065_Params::Channel_EN>(b.Channel_Settings_En);
 			Ch_LSB = static_cast<NT1065_Params::Channel_LSB>(b.Channel_Settings_LSB);
@@ -472,6 +527,7 @@ public:
 		}
 	} Channel_Settings[4];
 
+	///<summary>NT1065 PLL settings</summary>
 	struct PLL_Settings {
 		PLL_Band PLL_Band = PLL_Band::L1;
 		PLL_Enable PLL_EN = PLL_Enable::enabled;
@@ -484,6 +540,7 @@ public:
 
 #pragma pack(push)
 #pragma pack(1)
+		///<summary>Binary representation</summary>
 		struct binary {
 			std::uint8_t PLL_Settings_PLL_EN : 1;
 			std::uint8_t PLL_Settings_PLL_Band : 1;
@@ -501,7 +558,9 @@ public:
 			std::uint8_t PLL_Settings_reserved_2 : 5;
 		};
 #pragma pack(pop)
-		
+
+		///<summary>Convert from binary representaion to the standalone variables</summary>
+		///<param name='b'>Binary object</param>
 		void ConvertFromBinary(const binary &b) {
 			PLL_EN = static_cast<NT1065_Params::PLL_Enable>(b.PLL_Settings_PLL_EN);
 			PLL_Band = static_cast<NT1065_Params::PLL_Band>(b.PLL_Settings_PLL_Band);
@@ -515,6 +574,7 @@ public:
 
 #pragma pack(push)
 #pragma pack(1)
+	///<summary>Service struct to combine all of the binary representations</summary>
 	struct byte_registers {
 		System_Info::binary System_Info;
 		General_Settings::binary General_Settings;
@@ -525,6 +585,8 @@ public:
 	} raw_params;
 #pragma pack(pop)
 
+	///<summary>Check parameters for bounds</summary>
+	///<returns>0 if Ok, 1 otherwise</returns>
 	std::int32_t CheckParamsForErrors() {
 		if (Clock_Settings.CDIV_R < 8 || Clock_Settings.CDIV_R > 32)
 			return 1;
@@ -547,6 +609,7 @@ public:
 		return 0;
 	}
 
+	///<summary>Assign buffer content to the binary representation</summary>
 	void AssignBuffer(const std::uint8_t* buffer) {
 		std::uint8_t* raw_ptr = reinterpret_cast<std::uint8_t*>(&raw_params);
 		for (auto i = 0; i < registers_size; ++i) {
@@ -554,6 +617,7 @@ public:
 		}
 	}
 
+	///<summary>Parse the binary representation to get values</summary>
 	void ParseBuffer() {
 		System_Info.ConvertFromBinary(raw_params.System_Info);
 		General_Settings.ConvertFromBinary(raw_params.General_Settings);
@@ -567,6 +631,7 @@ public:
 		
 	}
 
+	///<summary>Get buffer from the settings values</summary>
 	void FormBuffer() {
 		registers[0] = static_cast<std::uint8_t>(System_Info.ID_h);
 		registers[1] = (static_cast<std::uint8_t>(System_Info.ID_l) << 3) | static_cast<std::uint8_t>(System_Info.Release);
@@ -607,6 +672,8 @@ public:
 		}
 	}
 
+	///<summary>Save parameters to file</summary>
+	///<param name='filename'>File address</param>
 	void SaveParams(const std::string &filename = "Test.hex") {
 		std::ofstream of(filename.c_str());
 		if (of.is_open()) {
@@ -619,16 +686,22 @@ public:
 		of.close();
 	}
 
+	///<summary>Get std::vector with buffer content</summary>
+	///<returns>std::vector with buffer content</returns>
 	std::vector<std::uint8_t> GetBuffer() {
 		std::vector<std::uint8_t> res(registers, registers + registers_size);
 		return res;
 	}
 
+	///<summary>Get std::uint8_t pointer with buffer content</summary>
+	///<returns>std::uint8_t pointer with buffer content</returns>
 	std::uint8_t* GetBufferPtr() {
 		auto res = registers;
 		return res;
 	}
 
+	///<summary>Set internal buffer values to external std::vector</summary>
+	///<param name='src'>External vector with register values</param>
 	template <typename T>
 	void SetBuffer(const std::vector<T> &src) {
 		if (src.size() != registers_size)
@@ -639,6 +712,8 @@ public:
 
 private:
 	static const std::size_t registers_size = 49;
+
+	///<summary>Internal array to store register values</summary>
 	std::uint8_t registers[registers_size];
 };
 
@@ -646,8 +721,10 @@ private:
 #pragma warning(push)
 #pragma warning(disable:4312)
 #endif // WIN32
+///<summary>Class for performing the SPI flashing on the MC127.01 board</summary>
 class NT1065_SPI_Setup {
 public:
+	///<summary>Setup status</summary>
 	enum class NT1065_Status {
 		Ok,
 		PLL_Lock_Ok,
@@ -671,7 +748,7 @@ private:
 	std::uint32_t ARMSC_SPICSCTL = ARMSC_Base + 0x4;
 
 
-	// Refer to the BBP2 user guide
+	///<summary>Setup SPI as master device. Refer to the BBP2 user guide</summary>
 	void Setup_SPI_Master() {
 		// Clock setup (5 MHz)
 		*reinterpret_cast<std::uint32_t*>(SSPCPSR) = 0x8;
@@ -683,6 +760,8 @@ private:
 		*reinterpret_cast<std::uint32_t*>(SSPCR1) = 0x2;	
 	}
 
+	///<summary>Set active device number</summary>
+	///<param name='device_number'>SPI device number</param>
 	template <typename T>
 	void SPI_Set_Active_Device(T device_number) {
 		if (device_number > 7) 
@@ -691,6 +770,8 @@ private:
 		*reinterpret_cast<std::uint32_t*>(ARMSC_SPICSCTL) = device_number;
 	}
 
+	///<summary>Send data to the NT1065. Some unknown legacy code runs here</summary>
+	///<param name='buf'>Partition to send</param>
 	NT1065_Status Send_Partition(const std::uint8_t *buf) {
 		// Wait for previous data to be sent
 		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
@@ -735,6 +816,9 @@ private:
 		return NT1065_Status::PLL_Error;
 	}
 
+	///<summary>Write single NT1065 registry</summary>
+	///<param name='reg_num'>Number of registry</param>
+	///<param name='reg_data'>Data to send</param>
 	template <typename T>
 	void WriteRegistry(T reg_num, std::uint8_t reg_data) {
 		std::uint8_t data = reg_num & 0x7F;
@@ -754,6 +838,8 @@ private:
 		*reinterpret_cast<std::uint32_t*>(SSPDR) = data;
 	}
 
+	///<summary>Read single NT1065 registry</summary>
+	///<param name='reg'>Number of registry</param>
 	template <typename T>
 	std::uint8_t ReadRegistry(T reg) {
 		// Wait for previous data to be sent
@@ -780,7 +866,9 @@ private:
 		res &= 0xFF;
 		return static_cast<std::uint8_t>(res);
 	}
-
+	
+	///<summary>Delay</summary>
+	///<param name='n_Ticks'>Number of ticks to wait (?)</param>
 	template <typename T>
 	void Delay(T n_Ticks) {
 		// God knows what does it mean
@@ -800,8 +888,11 @@ private:
 	}
 
 public:
+	///<summary>Object of NT1065_Params with values</summary>
 	NT1065_Params p;
 
+	///<summary>Main setup function</summary>
+	///<returns>Setup status</returns>
 	NT1065_Status Setup() {
 		Setup_SPI_Master();
 		SPI_Set_Active_Device(2);
@@ -824,4 +915,4 @@ public:
 #pragma warning(pop)
 #endif // WIN32
 
-#endif // !_1065_SETUP_HPP_
+#endif // !_NT1065_SETUP_HPP_
