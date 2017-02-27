@@ -13,6 +13,7 @@ class NT1065_Params {
 public:
 	NT1065_Params() {
 		std::fill(registers, registers + sizeof(registers) / sizeof(registers[0]), 0);
+		FormBuffer();
 	}
 
 #pragma region enums
@@ -133,15 +134,15 @@ public:
 	};
 
 	///<summary>Clock output DC for LVDS type</summary>
-		enum class CLK_OL {
+	enum class CLK_OL {
 		level_1_8 = 0,
 		level_2_4,
 		level_2_7,
 		level_external,
 	};
 
-		///<summary>Channel sideband</summary>
-		enum class Channel_LSB {
+	///<summary>Channel sideband</summary>
+	enum class Channel_LSB {
 		USB = 0,
 		LSB,
 	};
@@ -220,7 +221,7 @@ public:
 		plus_61_dB = 21,
 		plus_63_dB = 23,
 	};
-	
+
 	///<summary>IFA fine gain value</summary>
 	enum class IFA_Gain {
 		minus_0_35_dB = 7,
@@ -283,7 +284,7 @@ public:
 		upper_exceeded,
 		lower_exceeded
 	};
-	
+
 	///<summary>PLL lock indicator</summary>
 	enum class PLL_Lock {
 		not_locked = 0,
@@ -346,7 +347,7 @@ public:
 #pragma pack(push)
 #pragma pack(1)
 		///<summary>Binary representation</summary>
-		struct binary{
+		struct binary {
 			std::uint8_t General_Settings_Mode : 2;
 			std::uint8_t General_Settings_reserved_0 : 6;
 
@@ -415,7 +416,7 @@ public:
 
 	///<summary>NT1065 clock settings</summary>
 	struct Clock_Settings {
-		std::uint8_t CDIV_R = 8;
+		std::uint8_t CDIV_R = 15;
 		CLK_Source CLK_Source = CLK_Source::PLL_A;
 		CLK_TP CLK_TP = CLK_TP::LVDS;
 		CLK_CC CLK_CC = CLK_CC::V_0_45;
@@ -424,7 +425,7 @@ public:
 #pragma pack(push)
 #pragma pack(1)
 		///<summary>Binary representation</summary>
-		struct binary{
+		struct binary {
 			std::uint8_t Clock_Settings_CDIV_R : 5;
 			std::uint8_t Clock_Settings_reserved_9 : 3;
 
@@ -438,7 +439,7 @@ public:
 
 		///<summary>Convert from binary representaion to the standalone variables</summary>
 		///<param name='b'>Binary object</param>
-		void ConvertFromBinary(const binary &b) {			
+		void ConvertFromBinary(const binary &b) {
 			CDIV_R = b.Clock_Settings_CDIV_R;
 			CLK_OL = static_cast<NT1065_Params::CLK_OL>(b.Clock_Settings_CLK_OL);
 			CLK_CC = static_cast<NT1065_Params::CLK_CC>(b.Clock_Settings_CLK_CC);
@@ -452,7 +453,7 @@ public:
 	struct Channel_Settings {
 		Channel_LSB Ch_LSB = Channel_LSB::LSB;
 		Channel_EN Ch_EN = Channel_EN::enabled;
-		double LPF_code = 15.12;
+		double LPF_code = 32.4;
 
 		IFA_Amp_LVL IFA_AmpLvl = IFA_Amp_LVL::mV_200;
 		IFA_ResLoad IFA_ResLoad = IFA_ResLoad::mounted;
@@ -463,8 +464,8 @@ public:
 		RF_AGC_UB RF_AGC_UB = RF_AGC_UB::minus_42_dBm;
 		RF_AGC_LB RF_AGC_LB = RF_AGC_LB::minus_46_dBm;
 
-		double RF_Gain = 11.0;
-		IFA_Manual_Gain IFA_ManGC = IFA_Manual_Gain::minus_0_5_dB;
+		double RF_Gain = 25.5;
+		IFA_Manual_Gain IFA_ManGC = IFA_Manual_Gain::plus_41_dB;
 		IFA_Gain IFA_Gain = IFA_Gain::plus_0_3_dB;
 		IFA_ADC_Clk IFA_ADC_Clk = IFA_ADC_Clk::rising_edge;
 		IFA_ADC_OL IFA_ADC_OL = IFA_ADC_OL::V_2_7;
@@ -531,7 +532,7 @@ public:
 	struct PLL_Settings {
 		PLL_Band PLL_Band = PLL_Band::L1;
 		PLL_Enable PLL_EN = PLL_Enable::enabled;
-		std::uint32_t NDiv_R = 79;
+		std::uint32_t NDiv_R = 159;
 		std::uint8_t RDiv_R = 1;
 		PLL_EXE PLL_EXE = PLL_EXE::start;
 
@@ -623,12 +624,12 @@ public:
 		General_Settings.ConvertFromBinary(raw_params.General_Settings);
 		Clock_Settings.ConvertFromBinary(raw_params.Clock_Settings);
 
-		for (auto i = 0; i < 4; ++i) 
+		for (auto i = 0; i < 4; ++i)
 			Channel_Settings[i].ConvertFromBinary(raw_params.Channel_Settings[i]);
 
 		for (auto i = 0; i < 2; ++i)
 			PLL_Settings[i].ConvertFromBinary(raw_params.PLL_Settings[i]);
-		
+
 	}
 
 	///<summary>Get buffer from the settings values</summary>
@@ -679,7 +680,7 @@ public:
 		if (of.is_open()) {
 			of << ";NT1065.2\n";
 			for (auto i = 0; i < sizeof(registers); ++i) {
-				of << "Reg" << std::dec << i << "\t" << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<int32_t>(registers[i]) << "\n";
+				of << "Reg" << std::dec << i << "\t" << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<std::int32_t>(registers[i]) << "\n";
 			}
 		}
 		of.flush();
@@ -704,10 +705,10 @@ public:
 	///<param name='src'>External vector with register values</param>
 	template <typename T>
 	void SetBuffer(const std::vector<T> &src) {
-		if (src.size() != registers_size)
+		if (src.size() > registers_size)
 			return;
 		for (auto i = 0; i < registers_size; ++i)
-			registers[i] = src[i];		
+			registers[i] = src[i];
 	}
 
 private:
@@ -716,6 +717,9 @@ private:
 	///<summary>Internal array to store register values</summary>
 	std::uint8_t registers[registers_size];
 };
+
+#define outl(val, addr) (*(volatile unsigned int*)(addr) = (unsigned int)(val))
+#define inl(addr) *(volatile unsigned int*)(addr)
 
 #ifdef _WIN32
 #pragma warning(push)
@@ -779,21 +783,25 @@ private:
 		}
 
 		// std::vector constructor would be more preferable, but STL by DS-5 doesn't support C++11
-		std::uint32_t first_pack[] = { 2, 3, 41, 45, 42, 46, 43, 47, 43, 47, };
+		std::uint32_t first_pack[] = { 2, 3, 41, 45, 42, 46, 43, 47, };
 		for (auto i = 0; i < sizeof(first_pack) / sizeof(first_pack[0]); ++i)
-			WriteRegistry(i, buf[i]);
-		
+			WriteRegistry(first_pack[i], buf[first_pack[i]]);
+
+		// Execute PLL tuning
+		WriteRegistry(43, buf[43] | 0x1);
+		WriteRegistry(47, buf[47] | 0x1);
+
 		Delay(160000);
 
 		std::uint32_t filter_pack[] = { 14, 21, 28, 35, 4, };
 		for (auto i = 0; i < sizeof(filter_pack) / sizeof(filter_pack[0]); ++i)
-			WriteRegistry(i, buf[i]);
+			WriteRegistry(filter_pack[i], buf[filter_pack[i]]);
 
 		Delay(2200000);
 
 		std::uint32_t second_pack[] = { 12, 11, 16, 23, 30, 37, 15, 22, 29, 36, 19, 26, 33, 40, 13, 20, 27, 34, };
 		for (auto i = 0; i < sizeof(second_pack) / sizeof(second_pack[0]); ++i)
-			WriteRegistry(i, buf[i]);
+			WriteRegistry(second_pack[i], buf[second_pack[i]]);
 
 		// Wait for PLL to be set up
 		std::uint16_t pll_status = 0;
@@ -807,8 +815,8 @@ private:
 		pll_status |= ReadRegistry(48);
 
 		if ((pll_status & 0x0101) == 0x0101){
-			auto LPF_status = ReadRegistry(4);
-			if ((LPF_status & 0x2) == 0x2)
+			std::uint8_t LPF_status = ReadRegistry(4);
+			if ((LPF_status & 0x3) != 0x2)
 				return NT1065_Status::LPF_Error;
 			return NT1065_Status::PLL_Lock_Ok;
 		}
@@ -821,7 +829,7 @@ private:
 	///<param name='reg_data'>Data to send</param>
 	template <typename T>
 	void WriteRegistry(T reg_num, std::uint8_t reg_data) {
-		std::uint8_t data = reg_num & 0x7F;
+		std::uint32_t data = reg_num & 0x7F;
 		data <<= 8;
 		data |= reg_data;
 
@@ -899,10 +907,12 @@ public:
 		auto NT1065_ID = (ReadRegistry(0) << 8) | ReadRegistry(1);
 		auto true_ID = 0x214A;
 		if (NT1065_ID == true_ID) {
-			std::cout << "NT1065_ID ok";
+			std::cout << "NT1065_ID ok\n";
 			auto result = Send_Partition(p.GetBufferPtr());
-			if (result == NT1065_Status::PLL_Lock_Ok)
+			if (result == NT1065_Status::PLL_Lock_Ok){
+				std::cout << "NT1065_PLL_Lock ok\n";
 				return NT1065_Status::Ok;
+			}
 			else
 				return result;
 		}
