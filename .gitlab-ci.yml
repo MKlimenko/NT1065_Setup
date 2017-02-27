@@ -1,0 +1,7 @@
+NT1065_Setup:
+ script:
+  - 'setlocal'
+  - 'chcp 65001'
+  - 'call "%VS140COMNTOOLS%..\..\vc\vcvarsall.bat" x86_amd64'
+  - 'msbuild.exe make\vs140\NT1065_Setup.sln /t:Rebuild /p:Configuration=Release /p:Platform="x64" /m'
+  - 'call install.bat'
