@@ -702,13 +702,20 @@ public:
 	}
 
 	///<summary>Set internal buffer values to external std::vector</summary>
-	///<param name='src'>External vector with register values</param>
+	///<param name='src'>External array with register values</param>
 	template <typename T>
-	void SetBuffer(const std::vector<T> &src) {
-		if (src.size() > registers_size)
+	void SetBuffer(const T *src, std::size_t src_size) {
+		if (src_size > registers_size)
 			return;
 		for (auto i = 0; i < registers_size; ++i)
 			registers[i] = src[i];
+	}
+
+	///<summary>Set internal buffer values to external std::vector</summary>
+	///<param name='src'>External std::vector with register values</param>
+	template <typename T>
+	void SetBuffer(const std::vector<T> &src) {
+		SetBuffer(&src[0], src.size());
 	}
 
 private:
