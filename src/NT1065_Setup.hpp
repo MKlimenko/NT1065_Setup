@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 ///<summary>Class for holding the NT1065 parameters</summary>
@@ -683,19 +684,47 @@ public:
 		}
 	}
 
+
+#ifdef _WIN32
 	///<summary>Save parameters to file</summary>
 	///<param name='filename'>File address</param>
 	void SaveParams(const std::string &filename = "Test.hex") {
 		std::ofstream of(filename.c_str());
 		if (of.is_open()) {
 			of << ";NT1065.2\n";
-			for (auto i = 0; i < sizeof(registers); ++i) {
+			for (auto i = 0; i < registers_size; ++i) {
 				of << "Reg" << std::dec << i << "\t" << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<std::int32_t>(registers[i]) << "\n";
 			}
 		}
 		of.flush();
 		of.close();
 	}
+
+	///<summary>Load parameters from file</summary>
+	///<param name='filename'>File address</param>
+	void LoadParams(const std::string &filename = "Test.hex") {
+		std::ifstream inf(filename.c_str());		
+		std::string line;
+		if (inf.is_open()) {
+			std::getline(inf, line);
+			if (line != ";NT1065.2")
+				return;
+			for (auto i = 0; i < registers_size; ++i) {
+				std::getline(inf, line);
+				std::stringstream linestream(line);
+				std::string data;
+
+				std::getline(linestream, data, '\t');
+				if (data != ("Reg" + std::to_string(i)))
+					return;
+				std::string s;
+				linestream >> s;
+				registers[i] = static_cast<std::uint8_t>(std::stoul(s, nullptr, 16));
+			}
+		}
+		inf.close();
+	}
+#endif
 
 private:
 	static const std::size_t registers_size = 49;

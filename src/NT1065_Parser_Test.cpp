@@ -51,6 +51,15 @@ namespace NT1065_Parser_Test
 		}
 					
 	public:
+		TEST_METHOD(Save_and_Load)
+		{
+			auto pre_buffer = p.GetBuffer();
+			p.SaveParams();
+			p.LoadParams();
+			auto post_buffer = p.GetBuffer();
+			Assert::IsTrue(pre_buffer == post_buffer);
+		}
+
 		TEST_METHOD(Mode)
 		{
 			CommonTest(p.s.General_Settings.Mode, 4);

@@ -5,6 +5,7 @@
 
 void main() {
 	NT1065_Params p;
+
 	p.FormBuffer();
 	// Extract the generated buffer from the class member
 	auto result_pre = p.GetBuffer();
@@ -23,4 +24,7 @@ void main() {
 			}
 		}
 	}
+
+	p.SaveParams("G:\\Lib.hex");
+	p.LoadParams("G:\\Lib.hex");
 }
