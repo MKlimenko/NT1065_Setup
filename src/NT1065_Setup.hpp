@@ -13,6 +13,7 @@ class NT1065_Params {
 public:
 	NT1065_Params() {
 		std::fill(registers, registers + sizeof(registers) / sizeof(registers[0]), 0);
+		raw_params = reinterpret_cast<byte_registers*>(registers);
 		FormBuffer();
 	}
 
@@ -105,7 +106,7 @@ public:
 		valid
 	};
 
-	///<summary>RF AGC idnicator</summary>
+	///<summary>RF AGC indicator</summary>
 	enum class RF_AGC {
 		input_ok = 0,
 		input_lower,
@@ -185,7 +186,7 @@ public:
 		level_2_00
 	};
 
-	///<summary>Output iterface</summary>
+	///<summary>Output interface</summary>
 	enum class IFA_OT {
 		analog = 0,
 		sg_mg
@@ -316,7 +317,7 @@ public:
 			ID_l = b.ID_l;
 			Release = b.Release;
 		}
-	} System_Info;
+	};
 
 	///<summary>NT1065 general settings</summary>
 	struct General_Settings {
@@ -342,7 +343,7 @@ public:
 		RF_AGC RF_AGC_Up = RF_AGC::input_ok;
 		double RF_GainSt = 0;
 
-		std::uint8_t IFA_GainSt = 0;
+		IFA_Manual_Gain IFA_GainSt = IFA_Manual_Gain::minus_0_5_dB;
 
 #pragma pack(push)
 #pragma pack(1)
@@ -405,14 +406,14 @@ public:
 			PLL_VCO_AOK = static_cast<NT1065_Params::PLL_VCO_AOK>(b.General_Settings_PLL_VCO_AOK);
 			PLL_LI_AOK = static_cast<NT1065_Params::PLL_LI_AOK>(b.General_Settings_PLL_LI_AOK);
 			LPF_ACS_AOK = static_cast<NT1065_Params::LPF_ACS_AOK>(b.General_Settings_LPF_ACS_AOK);
-			TS_code = (b.General_Settings_TS_code_h << 8) | b.General_Settings_TS_code_l;
+			TS_code = 417.2 - 0.722 * ((b.General_Settings_TS_code_h << 8) | b.General_Settings_TS_code_l);
 			AOK = static_cast<NT1065_Params::AOK>(b.General_Settings_AOK);
 			RF_GainSt = b.General_Settings_RF_GainSt * 0.95 + 11;
 			RF_AGC_Up = static_cast<NT1065_Params::RF_AGC>(b.General_Settings_RF_AGC);
 			RF_AGC_Down = static_cast<NT1065_Params::RF_AGC>(b.General_Settings_RF_AGC);
-			IFA_GainSt = b.General_Settings_IFA_GainSt;
+			IFA_GainSt = static_cast<NT1065_Params::IFA_Manual_Gain>(b.General_Settings_IFA_GainSt);
 		}
-	} General_Settings;
+	};
 
 	///<summary>NT1065 clock settings</summary>
 	struct Clock_Settings {
@@ -447,7 +448,7 @@ public:
 			CLK_Source = static_cast<NT1065_Params::CLK_Source>(b.Clock_Settings_CLK_Source);
 		}
 
-	} Clock_Settings;
+	};
 
 	///<summary>NT1065 channel settings</summary>
 	struct Channel_Settings {
@@ -526,7 +527,7 @@ public:
 			IFA_ADC_OL = static_cast<NT1065_Params::IFA_ADC_OL>(b.Channel_Settings_IFA_ADC_OL);
 			IFA_ADC_Clk = static_cast<NT1065_Params::IFA_ADC_Clk>(b.Channel_Settings_IFA_ADC_Clk);
 		}
-	} Channel_Settings[4];
+	};
 
 	///<summary>NT1065 PLL settings</summary>
 	struct PLL_Settings {
@@ -571,105 +572,114 @@ public:
 			PLL_LI = static_cast<NT1065_Params::PLL_Lock>(b.PLL_Settings_PLL_LI);
 			Vco_CV = static_cast<NT1065_Params::Vco_CV>(b.PLL_Settings_Vco_CV);
 		}
-	} PLL_Settings[2];
+	};
 
-#pragma pack(push)
-#pragma pack(1)
-	///<summary>Service struct to combine all of the binary representations</summary>
-	struct byte_registers {
-		System_Info::binary System_Info;
-		General_Settings::binary General_Settings;
-		Clock_Settings::binary Clock_Settings;
-		Channel_Settings::binary Channel_Settings[4];
-		PLL_Settings::binary PLL_Settings[2];
+	///<summary>All of the NT1065 settings</summary>
+	struct Settings {
+		System_Info System_Info;
+		General_Settings General_Settings;
+		Clock_Settings Clock_Settings;
+		Channel_Settings Channel_Settings[4];
+		PLL_Settings PLL_Settings[2];
+	} s;
 
-	} raw_params;
-#pragma pack(pop)
-
-	///<summary>Check parameters for bounds</summary>
-	///<returns>0 if Ok, 1 otherwise</returns>
-	std::int32_t CheckParamsForErrors() {
-		if (Clock_Settings.CDIV_R < 8 || Clock_Settings.CDIV_R > 32)
-			return 1;
-
-		for (auto i = 0; i < 4; ++i) {
-			if (Channel_Settings[i].LPF_code < 11.22 || Channel_Settings[i].LPF_code > 43.41)
-				return 1;
-
-			if (Channel_Settings[i].RF_Gain < 11 || Channel_Settings[i].RF_Gain > 25.5)
-				return 1;
-		}
-
-		for (auto i = 0; i < 2; ++i) {
-			if (PLL_Settings[i].NDiv_R < 48 || PLL_Settings[i].NDiv_R > 511)
-				return 1;
-			if (PLL_Settings[i].RDiv_R < 1 || PLL_Settings[i].RDiv_R > 15)
-				return 1;
-		}
-
-		return 0;
+	///<summary>Get std::uint8_t pointer with buffer content</summary>
+	///<returns>std::uint8_t pointer with buffer content</returns>
+	std::uint8_t* GetBufferPtr() {
+		auto res = registers;
+		return res;
 	}
 
-	///<summary>Assign buffer content to the binary representation</summary>
-	void AssignBuffer(const std::uint8_t* buffer) {
-		std::uint8_t* raw_ptr = reinterpret_cast<std::uint8_t*>(&raw_params);
-		for (auto i = 0; i < registers_size; ++i) {
-			*raw_ptr++ = buffer[i];
-		}
+	///<summary>Get std::vector with buffer content</summary>
+	///<returns>std::vector with buffer content</returns>
+	std::vector<std::uint8_t> GetBuffer() {
+		std::vector<std::uint8_t> res(registers, registers + registers_size);
+		return res;
 	}
 
+	///<summary>Set internal buffer values to external std::vector</summary>
+	///<param name='src'>External array with register values</param>
+	template <typename T>
+	void SetBuffer(const T *src, std::size_t src_size) {
+		if (src_size > registers_size)
+			return;
+		for (auto i = 0; i < registers_size; ++i)
+			registers[i] = src[i];
+
+		ParseBuffer();
+	}
+
+	///<summary>Set internal buffer values to external std::vector</summary>
+	///<param name='src'>External std::vector with register values</param>
+	template <typename T>
+	void SetBuffer(const std::vector<T> &src) {
+		SetBuffer(&src[0], src.size());
+	}
+
+	///<summary>Get NT1065 settings</summary>
+	///<returns>Settings object</returns>
+	Settings GetSettings() {
+		return s;
+	}
+
+	///<summary>Set the settings struct</summary>
+	///<param name='settings'>External Settings object</param>
+	void SetSettings(const Settings &settings) {
+		s = settings;
+		FormBuffer();
+	}
+	
 	///<summary>Parse the binary representation to get values</summary>
 	void ParseBuffer() {
-		System_Info.ConvertFromBinary(raw_params.System_Info);
-		General_Settings.ConvertFromBinary(raw_params.General_Settings);
-		Clock_Settings.ConvertFromBinary(raw_params.Clock_Settings);
+		s.System_Info.ConvertFromBinary(raw_params->System_Info);
+		s.General_Settings.ConvertFromBinary(raw_params->General_Settings);
+		s.Clock_Settings.ConvertFromBinary(raw_params->Clock_Settings);
 
 		for (auto i = 0; i < 4; ++i)
-			Channel_Settings[i].ConvertFromBinary(raw_params.Channel_Settings[i]);
+			s.Channel_Settings[i].ConvertFromBinary(raw_params->Channel_Settings[i]);
 
 		for (auto i = 0; i < 2; ++i)
-			PLL_Settings[i].ConvertFromBinary(raw_params.PLL_Settings[i]);
-
+			s.PLL_Settings[i].ConvertFromBinary(raw_params->PLL_Settings[i]);
 	}
 
-	///<summary>Get buffer from the settings values</summary>
+	///<summary>Get buffer from the s values</summary>
 	void FormBuffer() {
-		registers[0] = static_cast<std::uint8_t>(System_Info.ID_h);
-		registers[1] = (static_cast<std::uint8_t>(System_Info.ID_l) << 3) | static_cast<std::uint8_t>(System_Info.Release);
+		registers[0] = static_cast<std::uint8_t>(s.System_Info.ID_h);
+		registers[1] = (static_cast<std::uint8_t>(s.System_Info.ID_l) << 3) | static_cast<std::uint8_t>(s.System_Info.Release);
 
-		// General settings
-		registers[2] = static_cast<std::uint8_t>(General_Settings.Mode);
-		registers[3] = (static_cast<std::uint8_t>(General_Settings.TCXO) << 1) | static_cast<std::uint8_t>(General_Settings.LO_Source);
-		registers[4] = (static_cast<std::uint8_t>(General_Settings.LPF_ACS_S) << 1) | static_cast<std::uint8_t>(General_Settings.LPF_EXE);
-		registers[5] = (static_cast<std::uint8_t>(General_Settings.Ch_StNumSel) << 4) | (static_cast<std::uint8_t>(General_Settings.TS_MD) << 1) |
-			static_cast<std::uint8_t>(General_Settings.TS_EXE);
-		registers[6] = (static_cast<std::uint8_t>(General_Settings.LPF_ACS_AOK) << 4) | (static_cast<std::uint8_t>(General_Settings.PLL_LI_AOK) << 3) |
-			(static_cast<std::uint8_t>(General_Settings.PLL_VCO_AOK) << 2) | (static_cast<std::uint8_t>(General_Settings.RF_AGC_AOK) << 1) | static_cast<std::uint8_t>(General_Settings.StdBy_AOK);
+		// General s
+		registers[2] = static_cast<std::uint8_t>(s.General_Settings.Mode);
+		registers[3] = (static_cast<std::uint8_t>(s.General_Settings.TCXO) << 1) | static_cast<std::uint8_t>(s.General_Settings.LO_Source);
+		registers[4] = (static_cast<std::uint8_t>(s.General_Settings.LPF_ACS_S) << 1) | static_cast<std::uint8_t>(s.General_Settings.LPF_EXE);
+		registers[5] = (static_cast<std::uint8_t>(s.General_Settings.Ch_StNumSel) << 4) | (static_cast<std::uint8_t>(s.General_Settings.TS_MD) << 1) |
+			static_cast<std::uint8_t>(s.General_Settings.TS_EXE);
+		registers[6] = (static_cast<std::uint8_t>(s.General_Settings.LPF_ACS_AOK) << 4) | (static_cast<std::uint8_t>(s.General_Settings.PLL_LI_AOK) << 3) |
+			(static_cast<std::uint8_t>(s.General_Settings.PLL_VCO_AOK) << 2) | (static_cast<std::uint8_t>(s.General_Settings.RF_AGC_AOK) << 1) | static_cast<std::uint8_t>(s.General_Settings.StdBy_AOK);
 
-		// Clock settings
-		registers[11] = Clock_Settings.CDIV_R;
-		registers[12] = (static_cast<std::uint8_t>(Clock_Settings.CLK_Source) << 5) | (static_cast<std::uint8_t>(Clock_Settings.CLK_TP) << 4) |
-			(static_cast<std::uint8_t>(Clock_Settings.CLK_CC) << 2) | static_cast<std::uint8_t>(Clock_Settings.CLK_OL);
+		// Clock s
+		registers[11] = s.Clock_Settings.CDIV_R;
+		registers[12] = (static_cast<std::uint8_t>(s.Clock_Settings.CLK_Source) << 5) | (static_cast<std::uint8_t>(s.Clock_Settings.CLK_TP) << 4) |
+			(static_cast<std::uint8_t>(s.Clock_Settings.CLK_CC) << 2) | static_cast<std::uint8_t>(s.Clock_Settings.CLK_OL);
 
-		// Channel settings
+		// Channel s
 		for (auto i = 0; i < 4; ++i) {
-			registers[13 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].Ch_LSB) << 1) | static_cast<std::uint8_t>(Channel_Settings[i].Ch_EN);
-			registers[14 + 7 * i] = static_cast<std::uint8_t>(std::floor(Channel_Settings[i].LPF_code * 3.422 - 29.74 + 0.5)); // Linear approximation (p. 16 ver. 2.05)
-			registers[15 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].IFA_AmpLvl) << 6) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ResLoad) << 5) |
-				(static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_MD) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_AGC_MD) << 3) |
-				(static_cast<std::uint8_t>(Channel_Settings[i].IFA_OP) << 1) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_OT);
-			registers[16 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_UB) << 4) | static_cast<std::uint8_t>(Channel_Settings[i].RF_AGC_LB);
-			registers[17 + 7 * i] = (static_cast<std::uint8_t>(static_cast<std::uint32_t>(std::floor(0.5 + (Channel_Settings[i].RF_Gain - 11) / 0.95))) << 4) | (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) >> 3);
-			registers[18 + 7 * i] = ((static_cast<std::uint8_t>(Channel_Settings[i].IFA_ManGC) & 0x7) << 5) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_Gain);
-			registers[19 + 7 * i] = (static_cast<std::uint8_t>(Channel_Settings[i].IFA_ADC_Clk) << 2) | static_cast<std::uint8_t>(Channel_Settings[i].IFA_ADC_OL);
+			registers[13 + 7 * i] = (static_cast<std::uint8_t>(s.Channel_Settings[i].Ch_LSB) << 1) | static_cast<std::uint8_t>(s.Channel_Settings[i].Ch_EN);
+			registers[14 + 7 * i] = static_cast<std::uint8_t>(std::floor(s.Channel_Settings[i].LPF_code * 3.422 - 29.74 + 0.5)); // Linear approximation (p. 16 ver. 2.05)
+			registers[15 + 7 * i] = (static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_AmpLvl) << 6) | (static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_ResLoad) << 5) |
+				(static_cast<std::uint8_t>(s.Channel_Settings[i].RF_AGC_MD) << 4) | (static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_AGC_MD) << 3) |
+				(static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_OP) << 1) | static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_OT);
+			registers[16 + 7 * i] = (static_cast<std::uint8_t>(s.Channel_Settings[i].RF_AGC_UB) << 4) | static_cast<std::uint8_t>(s.Channel_Settings[i].RF_AGC_LB);
+			registers[17 + 7 * i] = (static_cast<std::uint8_t>(static_cast<std::uint32_t>(std::floor(0.5 + (s.Channel_Settings[i].RF_Gain - 11) / 0.95))) << 4) | (static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_ManGC) >> 3);
+			registers[18 + 7 * i] = ((static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_ManGC) & 0x7) << 5) | static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_Gain);
+			registers[19 + 7 * i] = (static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_ADC_Clk) << 2) | static_cast<std::uint8_t>(s.Channel_Settings[i].IFA_ADC_OL);
 		}
 
-		// PLL settings
+		// PLL s
 		for (auto i = 0; i < 2; ++i) {
-			registers[41 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].PLL_Band) << 1) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_EN);
-			registers[42 + 4 * i] = static_cast<std::uint8_t>(PLL_Settings[i].NDiv_R >> 1);
-			registers[43 + 4 * i] = ((static_cast<std::uint8_t>(PLL_Settings[i].NDiv_R) & 0x1) << 7) | (PLL_Settings[i].RDiv_R << 3) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_EXE);
-			registers[44 + 4 * i] = (static_cast<std::uint8_t>(PLL_Settings[i].Vco_CV) << 1) | static_cast<std::uint8_t>(PLL_Settings[i].PLL_LI);
+			registers[41 + 4 * i] = (static_cast<std::uint8_t>(s.PLL_Settings[i].PLL_Band) << 1) | static_cast<std::uint8_t>(s.PLL_Settings[i].PLL_EN);
+			registers[42 + 4 * i] = static_cast<std::uint8_t>(s.PLL_Settings[i].NDiv_R >> 1);
+			registers[43 + 4 * i] = ((static_cast<std::uint8_t>(s.PLL_Settings[i].NDiv_R) & 0x1) << 7) | (s.PLL_Settings[i].RDiv_R << 3) | static_cast<std::uint8_t>(s.PLL_Settings[i].PLL_EXE);
+			registers[44 + 4 * i] = (static_cast<std::uint8_t>(s.PLL_Settings[i].Vco_CV) << 1) | static_cast<std::uint8_t>(s.PLL_Settings[i].PLL_LI);
 		}
 	}
 
@@ -687,42 +697,27 @@ public:
 		of.close();
 	}
 
-	///<summary>Get std::vector with buffer content</summary>
-	///<returns>std::vector with buffer content</returns>
-	std::vector<std::uint8_t> GetBuffer() {
-		std::vector<std::uint8_t> res(registers, registers + registers_size);
-		return res;
-	}
-
-	///<summary>Get std::uint8_t pointer with buffer content</summary>
-	///<returns>std::uint8_t pointer with buffer content</returns>
-	std::uint8_t* GetBufferPtr() {
-		auto res = registers;
-		return res;
-	}
-
-	///<summary>Set internal buffer values to external std::vector</summary>
-	///<param name='src'>External array with register values</param>
-	template <typename T>
-	void SetBuffer(const T *src, std::size_t src_size) {
-		if (src_size > registers_size)
-			return;
-		for (auto i = 0; i < registers_size; ++i)
-			registers[i] = src[i];
-	}
-
-	///<summary>Set internal buffer values to external std::vector</summary>
-	///<param name='src'>External std::vector with register values</param>
-	template <typename T>
-	void SetBuffer(const std::vector<T> &src) {
-		SetBuffer(&src[0], src.size());
-	}
-
 private:
 	static const std::size_t registers_size = 49;
 
 	///<summary>Internal array to store register values</summary>
 	std::uint8_t registers[registers_size];
+
+#pragma pack(push)
+#pragma pack(1)
+	///<summary>Service struct to combine all of the binary representations</summary>
+	struct byte_registers {
+		System_Info::binary System_Info;
+		General_Settings::binary General_Settings;
+		Clock_Settings::binary Clock_Settings;
+		Channel_Settings::binary Channel_Settings[4];
+		PLL_Settings::binary PLL_Settings[2];
+
+		byte_registers() {
+			std::memset(this, 0, sizeof(byte_registers));
+		}
+	} *raw_params;
+#pragma pack(pop)
 };
 
 #define outl(val, addr) (*(volatile unsigned int*)(addr) = (unsigned int)(val))
@@ -914,10 +909,10 @@ public:
 		auto NT1065_ID = (ReadRegistry(0) << 8) | ReadRegistry(1);
 		auto true_ID = 0x214A;
 		if (NT1065_ID == true_ID) {
-			std::cout << "NT1065_ID ok\n";
+			std::printf("NT1065_ID ok\n");
 			auto result = Send_Partition(p.GetBufferPtr());
 			if (result == NT1065_Status::PLL_Lock_Ok){
-				std::cout << "NT1065_PLL_Lock ok\n";
+				std::printf("NT1065_PLL_Lock ok\n");
 				return NT1065_Status::Ok;
 			}
 			else

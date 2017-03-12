@@ -9,9 +9,8 @@ void main() {
 	// Extract the generated buffer from the class member
 	auto result_pre = p.GetBuffer();
 
-	p.AssignBuffer(result_pre.data());
 	// Extract the selected buffer and try to parse it
-	p.ParseBuffer();
+	p.SetBuffer(result_pre);
 	auto result_post = p.GetBuffer();
 	if (result_pre == result_post)
 		std::cout << "Success!\n";
