@@ -6,6 +6,13 @@
 void main() {
 	NT1065_Params p;
 
+	p.LoadParams("C:\\lib2.hex");
+	p.s.Channel_Settings[1].Ch_LSB = NT1065_Params::Channel_LSB::LSB;
+	p.SaveParams("C:\\lib2.hex");
+	p.LoadParams("C:\\lib2.hex");
+	p.ParseBuffer();
+
+
 	p.FormBuffer();
 	// Extract the generated buffer from the class member
 	auto result_pre = p.GetBuffer();

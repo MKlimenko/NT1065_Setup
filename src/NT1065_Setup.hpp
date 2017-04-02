@@ -18,7 +18,9 @@ public:
 		FormBuffer();
 	}
 
+#ifdef _WIN32
 #pragma region enums
+#endif
 	///<summary>NT1065 mode</summary>
 	enum class Mode {
 		standby = 0,
@@ -33,7 +35,7 @@ public:
 		MHz_24_84,
 	};
 
-	///<summary>Heterodyne source</summary>
+	///<summary>Oscillator source</summary>
 	enum class LO_Source {
 		PLL_A_Only = 0,		///<summary>PLL A for all of the channels</summary>
 		PLL_A_B,			///<summary>PLL A for channels 1 and 2, PLL B for 3 and 4</summary>
@@ -292,7 +294,9 @@ public:
 		not_locked = 0,
 		locked
 	};
+#ifdef _WIN32
 #pragma endregion enums
+#endif
 
 	///<summary>System information struct</summary>
 	struct System_Info {
@@ -766,7 +770,7 @@ public:
 		Error_NACK,
 		PLL_Error,
 		LPF_Error,
-		Unknows_Error
+		Unknown_Error
 	};
 
 private:
@@ -822,27 +826,30 @@ private:
 		WriteRegistry(43, buf[43] | 0x1);
 		WriteRegistry(47, buf[47] | 0x1);
 
-		Delay(160000);
+		while(1){
+			auto pll_exec = ReadRegistry(43) & 0x1;
+			auto pll_b_exec = ReadRegistry(47) & 0x1;
+			pll_exec |= (pll_b_exec << 1);
+			if(pll_exec == 0)
+				break;
+		}
 
 		std::uint32_t filter_pack[] = { 14, 21, 28, 35, 4, };
 		for (auto i = 0; i < sizeof(filter_pack) / sizeof(filter_pack[0]); ++i)
 			WriteRegistry(filter_pack[i], buf[filter_pack[i]]);
 
-		Delay(2200000);
+		while(1){
+			auto lpf_exec = ReadRegistry(4) & 0x1;
+			if(lpf_exec == 0)
+				break;
+		}
 
 		std::uint32_t second_pack[] = { 12, 11, 16, 23, 30, 37, 15, 22, 29, 36, 19, 26, 33, 40, 13, 20, 27, 34, };
 		for (auto i = 0; i < sizeof(second_pack) / sizeof(second_pack[0]); ++i)
 			WriteRegistry(second_pack[i], buf[second_pack[i]]);
 
 		// Wait for PLL to be set up
-		std::uint16_t pll_status = 0;
-		do{
-			pll_status = ReadRegistry(43) << 8;
-			pll_status |= ReadRegistry(47);
-			pll_status &= 0x0101;
-		} while (pll_status);
-
-		pll_status = ReadRegistry(44) << 8;
+		std::uint16_t pll_status = ReadRegistry(44) << 8;
 		pll_status |= ReadRegistry(48);
 
 		if ((pll_status & 0x0101) == 0x0101){
@@ -888,7 +895,7 @@ private:
 
 		// Read all the junk data
 		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x4) {
-			auto tmp_data = *reinterpret_cast<std::uint32_t*>(SSPDR);
+			volatile auto tmp_data = *reinterpret_cast<std::uint32_t*>(SSPDR);
 		}
 
 		reg |= 0x80;
@@ -900,30 +907,9 @@ private:
 			;
 		}
 
-		Delay(200);
 		std::uint32_t res = *reinterpret_cast<std::uint32_t*>(SSPDR);
 		res &= 0xFF;
 		return static_cast<std::uint8_t>(res);
-	}
-	
-	///<summary>Delay</summary>
-	///<param name='n_Ticks'>Number of ticks to wait (?)</param>
-	template <typename T>
-	void Delay(T n_Ticks) {
-		// God knows what does it mean
-		auto i = 0;
-		if (n_Ticks > 25) {
-			auto tmp = n_Ticks - 8;
-			tmp /= 17;
-			do {
-				++i;
-			} while (i < tmp);
-		}
-		else {
-			do {
-				++i;
-			} while (i < n_Ticks);
-		}
 	}
 
 public:
@@ -940,7 +926,7 @@ public:
 		if (NT1065_ID == true_ID) {
 			std::printf("NT1065_ID ok\n");
 			auto result = Send_Partition(p.GetBufferPtr());
-			if (result == NT1065_Status::PLL_Lock_Ok){
+			if (result == NT1065_Status::PLL_Lock_Ok) {
 				std::printf("NT1065_PLL_Lock ok\n");
 				return NT1065_Status::Ok;
 			}
@@ -949,8 +935,20 @@ public:
 		}
 		else
 			return NT1065_Status::Error_NACK;
-
 	}
+	
+	///<summary>Receive data from the NT1065</summary>
+	void Read_Partition() {
+		// Wait for previous data to be sent
+		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
+			;
+		}
+		std::uint8_t buffer[49];
+		for (auto i = 0; i < 49; ++i)
+			buffer[i] = ReadRegistry(i);
+		p.SetBuffer(buffer, 49);
+	}
+
 };
 #ifdef _WIN32
 #pragma warning(pop)
