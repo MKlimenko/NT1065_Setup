@@ -9,6 +9,8 @@
 #include <sstream>
 #include <vector>
 
+#include "armhal.h"
+
 ///<summary>Class for holding the NT1065 parameters</summary>
 class NT1065_Params {
 public:
@@ -767,56 +769,22 @@ public:
 	enum class NT1065_Status {
 		Ok,
 		PLL_Lock_Ok,
-		Error_NACK,
+		Wrong_ID,
 		PLL_Error,
 		LPF_Error,
 		Unknown_Error
 	};
 
 private:
-	std::uint32_t SSP_Base = 0xFFF0D000;
-	std::uint32_t SSPCR0 = SSP_Base + 0x000;
-	std::uint32_t SSPCR1 = SSP_Base + 0x004;
-	std::uint32_t SSPDR = SSP_Base + 0x008;
-	std::uint32_t SSPSR = SSP_Base + 0x00C;
-	std::uint32_t SSPCPSR = SSP_Base + 0x010;
-	std::uint32_t SSPICR = SSP_Base + 0x020;
-	std::uint32_t SSPDMACR = SSP_Base + 0x024;
+	const ARMHAL_SPI_CHIP_SELECT NT1065_device = ARMHAL_SPI_DEVICE_2;
+	const std::uint32_t Clock_frequency = 80000000;
+	const std::uint32_t SPI_frequency = 10000000;
+	const std::uint32_t SPI_bits = 16;
+	const ARMHAL_SPI_MODE SPI_mode = ARMHAL_SPI_MODE_0;
 
-	std::uint32_t ARMSC_Base = 0xFFF02000;
-	std::uint32_t ARMSC_SPICSCTL = ARMSC_Base + 0x4;
-
-
-	///<summary>Setup SPI as master device. Refer to the BBP2 user guide</summary>
-	void Setup_SPI_Master() {
-		// Clock setup (5 MHz)
-		*reinterpret_cast<std::uint32_t*>(SSPCPSR) = 0x8;
-	
-		// SPI mode setup
-		*reinterpret_cast<std::uint32_t*>(SSPCR0) = 0xF;
-
-		// SPI master/slave setup 
-		*reinterpret_cast<std::uint32_t*>(SSPCR1) = 0x2;	
-	}
-
-	///<summary>Set active device number</summary>
-	///<param name='device_number'>SPI device number</param>
-	template <typename T>
-	void SPI_Set_Active_Device(T device_number) {
-		if (device_number > 7) 
-			return;
-		
-		*reinterpret_cast<std::uint32_t*>(ARMSC_SPICSCTL) = device_number;
-	}
-
-	///<summary>Send data to the NT1065. Some unknown legacy code runs here</summary>
+		///<summary>Send data to the NT1065. Some unknown legacy code runs here</summary>
 	///<param name='buf'>Partition to send</param>
 	NT1065_Status Send_Partition(const std::uint8_t *buf) {
-		// Wait for previous data to be sent
-		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
-			;
-		}
-
 		// std::vector constructor would be more preferable, but STL by DS-5 doesn't support C++11
 		std::uint32_t first_pack[] = { 2, 3, 41, 45, 42, 46, 43, 47, };
 		for (auto i = 0; i < sizeof(first_pack) / sizeof(first_pack[0]); ++i)
@@ -871,43 +839,17 @@ private:
 		data <<= 8;
 		data |= reg_data;
 
-		// Wait for previous data to be sent
-		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
-			;
-		}
-
-		// Wait for SPI FIFO to empty
-		while ((*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x2) == 0) {
-			;
-		}
-
-		*reinterpret_cast<std::uint32_t*>(SSPDR) = data;
+		ARMHAL_SPI_Send(NT1065_device, data);
 	}
 
 	///<summary>Read single NT1065 registry</summary>
 	///<param name='reg'>Number of registry</param>
 	template <typename T>
 	std::uint8_t ReadRegistry(T reg) {
-		// Wait for previous data to be sent
-		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10){
-			;
-		}
-
-		// Read all the junk data
-		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x4) {
-			volatile auto tmp_data = *reinterpret_cast<std::uint32_t*>(SSPDR);
-		}
-
 		reg |= 0x80;
 		reg <<= 8;
-		*reinterpret_cast<std::uint32_t*>(SSPDR) = reg;
 
-		// Wait for transfer to complete
-		while ((*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x4) == 0) {
-			;
-		}
-
-		std::uint32_t res = *reinterpret_cast<std::uint32_t*>(SSPDR);
+		std::uint16_t res = ARMHAL_SPI_Receive(NT1065_device, reg);
 		res &= 0xFF;
 		return static_cast<std::uint8_t>(res);
 	}
@@ -916,16 +858,21 @@ public:
 	///<summary>Object of NT1065_Params with values</summary>
 	NT1065_Params p;
 
+	NT1065_SPI_Setup(){
+		ARMHAL_SPI_Settings settings = {Clock_frequency, SPI_frequency, SPI_bits, SPI_mode};
+		ARMHAL_SPI_Init(&settings);
+	}
+
 	///<summary>Main setup function</summary>
 	///<returns>Setup status</returns>
 	NT1065_Status Setup() {
-		Setup_SPI_Master();
-		SPI_Set_Active_Device(2);
 		auto NT1065_ID = (ReadRegistry(0) << 8) | ReadRegistry(1);
 		auto true_ID = 0x214A;
 		if (NT1065_ID == true_ID) {
 			std::printf("NT1065_ID ok\n");
 			auto result = Send_Partition(p.GetBufferPtr());
+			auto NT1065_ID = (ReadRegistry(0) << 8) | ReadRegistry(1);
+			NT1065_ID = (ReadRegistry(0) << 8) | ReadRegistry(1);
 			if (result == NT1065_Status::PLL_Lock_Ok) {
 				std::printf("NT1065_PLL_Lock ok\n");
 				return NT1065_Status::Ok;
@@ -934,15 +881,11 @@ public:
 				return result;
 		}
 		else
-			return NT1065_Status::Error_NACK;
+			return NT1065_Status::Wrong_ID;
 	}
 	
 	///<summary>Receive data from the NT1065</summary>
 	void Read_Partition() {
-		// Wait for previous data to be sent
-		while (*reinterpret_cast<std::uint32_t*>(SSPSR) & 0x10) {
-			;
-		}
 		std::uint8_t buffer[49];
 		for (auto i = 0; i < 49; ++i)
 			buffer[i] = ReadRegistry(i);
