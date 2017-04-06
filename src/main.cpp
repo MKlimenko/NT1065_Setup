@@ -1,4 +1,4 @@
-#include "NT1065_Setup.hpp"
+#include "NT1065_Params.hpp"
 
 #include <iostream>
 #include <vector>
@@ -6,7 +6,7 @@
 void main() {
 	NT1065_Params p;
 
-	p.LoadParams("C:\\lib2.hex");
+	p.LoadParams("G:\\lib.hex");
 	p.s.Channel_Settings[1].Ch_LSB = NT1065_Params::Channel_LSB::LSB;
 	p.SaveParams("C:\\lib2.hex");
 	p.LoadParams("C:\\lib2.hex");

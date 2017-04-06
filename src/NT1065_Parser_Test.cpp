@@ -1,5 +1,5 @@
 #include "CppUnitTest.h"
-#include "NT1065_Setup.hpp"
+#include "NT1065_Params.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
