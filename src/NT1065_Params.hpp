@@ -709,7 +709,7 @@ public:
 		std::string line;
 		if (inf.is_open()) {
 			std::getline(inf, line);
-			if (line != ";NT1065.2")
+			if(line.find(";NT1065.2") == std::string::npos)
 				return;
 			for (auto i = 0; i < registers_size; ++i) {
 				std::getline(inf, line);
