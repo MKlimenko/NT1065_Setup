@@ -168,8 +168,9 @@ namespace NT1065_Parser_Test
 		TEST_METHOD(Channel_LPF_code)
 		{
 			for (auto channel = 0; channel < 4; ++channel) {
-				std::vector<double> params = { 11.22, 14.83, 15.12, 15.69, 16.59, 17.60, 18.33, 19.36, 20.31, 21.13,
-					21.92, 21.89, 23.82, 24.94, 25.45, 26.50, 27.38, 28.31, 29.02, 29.64, 30.47, 31.19, 31.55, 43.41, };
+				//std::vector<double> params = { 11.22, 14.83, 15.12, 15.69, 16.59, 17.60, 18.33, 19.36, 20.31, 21.13,
+				//	21.92, 21.89, 23.82, 24.94, 25.45, 26.50, 27.38, 28.31, 29.02, 29.64, 30.47, 31.19, 31.55, 43.41, };
+				std::vector<double> params = { 14.83 };
 				CommonTest(p.s.Channel_Settings[channel].LPF_code, params);
 			}
 		}

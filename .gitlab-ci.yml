@@ -3,5 +3,8 @@ NT1065_Setup:
   - 'setlocal'
   - 'chcp 65001'
   - 'call "%VS140COMNTOOLS%..\..\vc\vcvarsall.bat" x86_amd64'
+  - 'msbuild.exe make\vs140\NT1065_Setup.sln /t:Rebuild /p:Configuration=Debug /p:Platform="x64" /m'
   - 'msbuild.exe make\vs140\NT1065_Setup.sln /t:Rebuild /p:Configuration=Release /p:Platform="x64" /m'
   - 'call install.bat'
+  - 'vstest.console.exe /EnableCodeCoverage /Platform:x64 /inisolation /Parallel make\vs140\x64\Debug\NT1065_Parser_Test.dll'
+  - 'vstest.console.exe /EnableCodeCoverage /Platform:x64 /inisolation /Parallel make\vs140\x64\Release\NT1065_Parser_Test.dll'
