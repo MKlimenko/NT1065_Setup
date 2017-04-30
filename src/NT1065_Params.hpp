@@ -723,6 +723,7 @@ public:
 				linestream >> tmp_str;
 				registers[i] = from_string(tmp_str);
 			}
+			ParseBuffer();
 		}
 		inf.close();
 	}
