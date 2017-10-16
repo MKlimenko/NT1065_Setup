@@ -711,17 +711,25 @@ public:
 			std::getline(inf, line);
 			if(line.find(";NT1065.2") == std::string::npos)
 				return;
-			for (auto i = 0; i < registers_size; ++i) {
-				std::getline(inf, line);
+			while (std::getline(inf, line)) {
 				std::stringstream linestream(line);
 				std::string data;
 
 				std::getline(linestream, data, '\t');
-				if (data != ("Reg" + to_string(i)))
-					return;
+				auto cur_reg = -1;
+				for (auto j = 0; j < registers_size; ++j) {
+					if (data != ("Reg" + to_string(j)))
+						continue;
+					else {
+						cur_reg = j;
+						break;
+					}
+				}
+				if (cur_reg == -1)
+					continue;
 				std::string tmp_str;
 				linestream >> tmp_str;
-				registers[i] = from_string(tmp_str);
+				registers[cur_reg] = from_string(tmp_str);
 			}
 			ParseBuffer();
 		}
