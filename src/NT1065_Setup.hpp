@@ -18,7 +18,7 @@ public:
 	};
 
 private:
-	const ARMHAL_SPI_CHIP_SELECT NT1065_device = ARMHAL_SPI_DEVICE_2;
+	ARMHAL_SPI_CHIP_SELECT NT1065_device = ARMHAL_SPI_DEVICE_2;
 	const std::uint32_t Clock_frequency = 80000000;
 	const std::uint32_t SPI_frequency = 10000000;
 	const std::uint32_t SPI_bits = 16;
@@ -134,6 +134,13 @@ public:
 		p.SetBuffer(buffer, 49);
 	}
 
+	void SPI_Device(ARMHAL_SPI_CHIP_SELECT device) {
+		NT1065_device = device;
+	}
+
+	ARMHAL_SPI_CHIP_SELECT& SPI_Device() {
+		return NT1065_device;
+	}
 };
 
 #endif // !_NT1065_SETUP_HPP_

@@ -735,7 +735,6 @@ public:
 		}
 		inf.close();
 	}
-
 private:
 	static const std::size_t registers_size = 49;
 

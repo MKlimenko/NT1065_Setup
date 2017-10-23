@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NT1065_Setup", "NT1065_Setu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NT1065_Parser_Test", "NT1065_Parser_Test\NT1065_Parser_Test.vcxproj", "{AC1396DE-F383-47F9-B704-72F6174A318E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NT1065_Settings_Preparation", "NT1065_Settings_Preparation\NT1065_Settings_Preparation.vcxproj", "{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{AC1396DE-F383-47F9-B704-72F6174A318E}.Release|x64.Build.0 = Release|x64
 		{AC1396DE-F383-47F9-B704-72F6174A318E}.Release|x86.ActiveCfg = Release|Win32
 		{AC1396DE-F383-47F9-B704-72F6174A318E}.Release|x86.Build.0 = Release|Win32
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Debug|x64.ActiveCfg = Debug|x64
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Debug|x64.Build.0 = Debug|x64
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Debug|x86.ActiveCfg = Debug|Win32
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Debug|x86.Build.0 = Debug|Win32
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Release|x64.ActiveCfg = Release|x64
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Release|x64.Build.0 = Release|x64
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Release|x86.ActiveCfg = Release|Win32
+		{F7DE9CAC-6E5C-4C95-AE62-3AA50559682C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
